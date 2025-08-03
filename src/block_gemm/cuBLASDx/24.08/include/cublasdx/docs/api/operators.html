@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operators &mdash; cuBLASDx 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/cublasdx_override.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Traits" href="traits.html" />
+    <link rel="prev" title="API reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" > 
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            cuBLASDx
+          </a>
+              <div class="version">
+                0.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #76b900;
+    }
+
+    .wy-side-nav-search a:link, .wy-nav-top a:link {
+      color: #fff;
+    }
+    .wy-side-nav-search a:visited, .wy-nav-top a:visited {
+      color: #fff;
+    }
+    .wy-side-nav-search a:hover, .wy-nav-top a:hover {
+      color: #fff;
+    }
+
+    .wy-menu-vertical a:link, .wy-menu-vertical a:visited {
+      color: #d9d9d9
+    }
+
+    .wy-menu-vertical a:active {
+      background-color: #76b900
+    }
+
+    .wy-side-nav-search>div.version {
+      color: rgba(0, 0, 0, 0.3)
+    }
+
+    /* override table width restrictions */
+    .wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+    }
+
+    .wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+    }
+  </style>
+  
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Documentation home</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../requirements_func.html">Requirements and Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../requirements_func.html#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../requirements_func.html#supported-compilers">Supported Compilers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../requirements_func.html#supported-functionality">Supported Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../requirements_func.html#supported-gemm-data-types">Supported GEMM Data Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Quick Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#cublasdx-in-your-project">cuBLASDx In Your Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#cublasdx-in-your-cmake-project">cuBLASDx In Your CMake Project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#using-custom-cutlass">Using Custom CUTLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#defined-variables">Defined Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction1.html">General Matrix Multiply Using cuBLASDx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#defining-gemm-operation">Defining GEMM Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#executing-gemm">Executing GEMM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../introduction1.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction1.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#launching-gemm-kernel">Launching GEMM Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#compilation">Compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Achieving High Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#general-advice">General Advice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#matrix-layouts">Matrix Layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#memory-management">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#advanced">Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#further-reading">Further Reading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../performance.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description-operators">Description Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#size-operator">Size Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#type-operator">Type Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#precision-operator">Precision Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arrangement-operator">Arrangement Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transposemode-operator">TransposeMode Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#leadingdimension-operator">LeadingDimension Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alignment-operator">Alignment Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#function-operator">Function Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sm-operator">SM Operator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#execution-operators">Execution Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#block-operator">Block Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#block-configuration-operators">Block Configuration Operators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits.html">Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits.html#description-traits">Description Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#size-trait">Size Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#type-trait">Type Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#precision-trait">Precision Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#function-trait">Function Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#arrangement-trait">Arrangement Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#transpose-mode-trait">Transpose Mode Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#alignment-trait">Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#suggested-alignment-trait">Suggested Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#sm-trait">SM Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-blas-trait">is_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-blas-execution-trait">is_blas_execution Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-complete-blas-trait">is_complete_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-complete-blas-execution-trait">is_complete_blas_execution Trait</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="traits.html#execution-traits">Execution Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#block-traits">Block Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="traits.html#other-traits">Other Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-supported">is_supported</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#suggested-leading-dimension-of">suggested_leading_dimension_of</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="methods.html">Execution Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="methods.html#block-execute-method">Block Execute Method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="methods.html#value-format">Value Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="methods.html#input-output-data-format">Input/Output Data Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="methods.html#shared-memory-usage">Shared Memory Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other_methods.html">Other Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other_methods.html#shared-memory-slicing">Shared Memory Slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other_methods.html#get-memory-layout">Get Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other_methods.html#suggested-shared-memory-layout">Suggested Shared Memory Layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#tensor">Tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#introduction-examples">Introduction Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#simple-gemm-examples">Simple GEMM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#nvrtc-examples">NVRTC Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#gemm-performance">GEMM Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../release_notes.html#id1">0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release_notes.html#id2">0.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#id4">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">Software License Agreement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../license.html#third-party-license-agreements">Third Party License Agreements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../license.html#cutlass">CUTLASS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cuBLASDx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API reference</a></li>
+      <li class="breadcrumb-item active">Operators</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="operators">
+<span id="operators-label"></span><h1>Operators<a class="headerlink" href="#operators" title="Permalink to this heading">¶</a></h1>
+<p>Operators are used to describe the properties and to configure the execution of the problem we want to solve. They are divided into
+<a class="reference internal" href="#description-operators-label"><span class="std std-ref">Description Operators</span></a> and <a class="reference internal" href="#execution-operators-label"><span class="std std-ref">Execution Operators</span></a>.</p>
+<hr class="docutils" />
+<div class="section" id="description-operators">
+<span id="description-operators-label"></span><h2>Description Operators<a class="headerlink" href="#description-operators" title="Permalink to this heading">¶</a></h2>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Default Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#size-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Size</span><span class="o">&lt;</span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="o">&gt;</span></code></a></p></td>
+<td><p>Not set</p></td>
+<td><p>Defines the problem size.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#function-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span></code></a></p></td>
+<td><p>Not set</p></td>
+<td><p>BLAS function. Use <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">function</span><span class="o">::</span><span class="n">MM</span></code> for <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#arrangement-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">arrangement</span><span class="p">,</span><span class="w"> </span><span class="n">arrangement</span><span class="p">,</span><span class="w"> </span><span class="n">arrangement</span><span class="o">&gt;</span></code></a></p></td>
+<td><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">row</span><span class="o">-</span><span class="n">major</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">col</span><span class="o">-</span><span class="n">major</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">col</span><span class="o">-</span><span class="n">major</span></code></p></td>
+<td><p>Arrangement of the each matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#transposemode-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span><span class="o">&lt;</span><span class="n">transpose_mode</span><span class="p">,</span><span class="w"> </span><span class="n">transpose_mode</span><span class="o">&gt;</span></code></a></p></td>
+<td><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">transposed</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">non</span><span class="o">-</span><span class="n">transposed</span></code></p></td>
+<td><p>Transpose mode of the each matrix (Deprecated since 0.2.0).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#precision-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Precision</span><span class="o">&lt;</span><span class="n">PA</span><span class="p">,</span><span class="w"> </span><span class="n">PB</span><span class="p">,</span><span class="w"> </span><span class="n">PC</span><span class="o">&gt;</span></code></a></p></td>
+<td><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">float</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">float</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">float</span></code></p></td>
+<td><p>Precision of matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> - <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__half</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">float</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">double</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_fp8_e5m2</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_fp8_e4m3</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_bfloat16</span></code>, or <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tf32_t</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#type-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">&gt;</span></code></a></p></td>
+<td><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">type</span><span class="o">::</span><span class="n">real</span></code></p></td>
+<td><p>Type of input and output data (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">type</span><span class="o">::</span><span class="n">real</span></code> or <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">type</span><span class="o">::</span><span class="n">complex</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#leadingdimension-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LeadingDimension</span><span class="o">&lt;</span><span class="n">LDA</span><span class="p">,</span><span class="w"> </span><span class="n">LDB</span><span class="p">,</span><span class="w"> </span><span class="n">LDC</span><span class="o">&gt;</span></code></a></p></td>
+<td><p>As defined by <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Size</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Arrangement</span></code> or <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span></code> operators</p></td>
+<td><p>Leading dimensions for matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#alignment-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Alignment</span><span class="o">&lt;</span><span class="n">a_align</span><span class="p">,</span><span class="w"> </span><span class="n">b_align</span><span class="p">,</span><span class="w"> </span><span class="n">c_align</span><span class="o">&gt;</span></code></a></p></td>
+<td><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="k">alignof</span><span class="p">(</span><span class="n">BLAS</span><span class="o">::</span><span class="n">a_value_type</span><span class="p">)</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="k">alignof</span><span class="p">(</span><span class="n">BLAS</span><span class="o">::</span><span class="n">b_value_type</span><span class="p">)</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="k">alignof</span><span class="p">(</span><span class="n">BLAS</span><span class="o">::</span><span class="n">c_value_type</span><span class="p">)</span></code></p></td>
+<td><p>Alignments (in bytes) of matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#sm-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">SM</span><span class="o">&lt;</span><span class="n">CC</span><span class="o">&gt;</span></code></a></p></td>
+<td><p>Not set</p></td>
+<td><p>Target CUDA architecture for which the BLAS function should be generated.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description operators define the problem we want to solve.
+Combined with <a class="reference internal" href="#execution-operators-label"><span class="std std-ref">Execution Operators</span></a>, they form a complete function descriptor that can be executed on a GPU.</p>
+<p>Operators are added (in arbitrary order) to construct the operation descriptor type. For example, to describe a matrix multiplication
+for non-transposed matrices A (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">m</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">k</span></code>), B (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">k</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">n</span></code>), C (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">m</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">n</span></code>) with complex double precision values where <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span></code> for
+execution on Volta architecture, one would write:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Type</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">type</span><span class="o">::</span><span class="n">complex</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Function</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>For a function descriptor to be complete, the following is required:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>One, and only one, <a class="reference internal" href="#size-operator-label"><span class="std std-ref">Size Operator</span></a>.</p></li>
+<li><p>One, and only one, <a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement Operator</span></a> or <a class="reference internal" href="#transposemode-operator-label"><span class="std std-ref">TransposeMode Operator</span></a>.</p></li>
+<li><p>One, and only one, <a class="reference internal" href="#function-operator-label"><span class="std std-ref">Function Operator</span></a>.</p></li>
+<li><p>One, and only one, <a class="reference internal" href="#sm-operator-label"><span class="std std-ref">SM Operator</span></a>.</p></li>
+</ul>
+</div></blockquote>
+<div class="section" id="size-operator">
+<span id="size-operator-label"></span><h3>Size Operator<a class="headerlink" href="#size-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Size</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">K</span><span class="o">&gt;</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Sets the problem size of the function to be executed.</p>
+<p>For <a class="reference internal" href="#function-operator-gemm-label"><span class="std std-ref">GEMM</span></a>:</p>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">M</span></code> - logical number of rows in matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">op</span><span class="p">(</span><span class="n">A</span><span class="p">)</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">N</span></code> - logical number of columns in matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">op</span><span class="p">(</span><span class="n">B</span><span class="p">)</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">K</span></code> - logical number of columns in matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">op</span><span class="p">(</span><span class="n">A</span><span class="p">)</span></code> and rows in <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.</p></li>
+</ul>
+<p>For example, for GEMM <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">M</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">N</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">K</span></code> specify that the <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">M</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">K</span></code>) matrix is multiplied by B (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">K</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">N</span></code>) matrix which results in C (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">M</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">N</span></code>) matrix (assuming <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> are non-transposed). See <a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a>, <a class="reference internal" href="#transposemode-operator-label"><span class="std std-ref">TransposeMode</span></a> and <a class="reference internal" href="#function-operator-gemm-label"><span class="std std-ref">GEMM</span></a>.</p>
+</div>
+<div class="section" id="type-operator">
+<span id="type-operator-label"></span><h3>Type Operator<a class="headerlink" href="#type-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cubladx</span><span class="o">::</span><span class="n">Type</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">type</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">type</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">real</span><span class="p">,</span>
+<span class="w">    </span><span class="n">complex</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Sets the type of input and output data used in computation. Use <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">type</span><span class="o">::</span><span class="n">real</span></code> for real data type, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">type</span><span class="o">::</span><span class="n">complex</span></code> for complex data type.</p>
+</div>
+<div class="section" id="precision-operator">
+<span id="precision-operator-label"></span><h3>Precision Operator<a class="headerlink" href="#precision-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Precision</span><span class="o">&lt;</span><span class="n">PA</span><span class="p">,</span><span class="w"> </span><span class="n">PB</span><span class="o">=</span><span class="n">PA</span><span class="p">,</span><span class="w"> </span><span class="n">PC</span><span class="o">=</span><span class="n">PA</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Sets the floating-point precision of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.
+The precision type - <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__half</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">float</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">double</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_fp8_e5m2</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_fp8_e4m3</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_bfloat16</span></code>, or <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tfloat32_t</span></code>, is the precision of the values used for input and output.</p>
+</div>
+<div class="section" id="arrangement-operator">
+<span id="arrangement-operator-label"></span><h3>Arrangement Operator<a class="headerlink" href="#arrangement-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">arrangement</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">arrangement</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">arrangement</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">arrangement</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">col</span><span class="o">-</span><span class="n">major</span><span class="p">,</span>
+<span class="w">    </span><span class="n">row</span><span class="o">-</span><span class="n">major</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">col_major</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">arrangement</span><span class="o">::</span><span class="n">col_major</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">left_layout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arrangement</span><span class="o">::</span><span class="n">col_major</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">row_major</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">arrangement</span><span class="o">::</span><span class="n">row_major</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">right_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arrangement</span><span class="o">::</span><span class="n">row_major</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Sets the order for <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> matrices used in the function. The order can be either column-major or row-major.
+Arrangement operator directly influences <a class="reference internal" href="other_methods.html#get-layout-other-label"><span class="std std-ref">Get Memory Layout</span></a> and <a class="reference internal" href="other_methods.html#suggest-layout-other-label"><span class="std std-ref">Suggested Shared Memory Layout</span></a> methods.
+Selecting a specific order for matrices doesn’t mean the function doesn’t accept matrices with different layouts, but it
+may influence the overall performance.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Arrangement</span></code> and <a class="reference internal" href="#transposemode-operator-label"><span class="std std-ref">TransposeMode</span></a> operators can’t be defined at the same time.</p>
+</div>
+</div>
+<div class="section" id="transposemode-operator">
+<span id="transposemode-operator-label"></span><h3>TransposeMode Operator<a class="headerlink" href="#transposemode-operator" title="Permalink to this heading">¶</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span></code> operator is deprecated since 0.2.0 and may be removed in future versions.</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">TransposeMode</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">transpose_mode</span><span class="w"> </span><span class="n">ATransposeMode</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">transpose_mode</span><span class="w"> </span><span class="n">BTransposeMode</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">transpose_mode</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">non_transposed</span><span class="p">,</span>
+<span class="w">    </span><span class="n">transposed</span><span class="p">,</span>
+<span class="w">    </span><span class="n">conj_transposed</span><span class="p">,</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">transpose_mode</span><span class="o">::</span><span class="n">non_transposed</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">transpose_mode</span><span class="o">::</span><span class="n">transposed</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">transpose_mode</span><span class="o">::</span><span class="n">conj_transposed</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Sets the transpose mode for the <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> matrices used in the function.
+For example, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span><span class="o">&lt;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="p">()</span></code> sets transpose mode of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> matrix as <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">non</span><span class="o">-</span><span class="n">transposed</span></code> for GEMM.
+Possible values for transpose mode are:</p>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">transpose_mode</span><span class="o">::</span><span class="n">non_transposed</span></code>,</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">transpose_mode</span><span class="o">::</span><span class="n">transposed</span></code>, and</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">transpose_mode</span><span class="o">::</span><span class="n">conj_transposed</span></code> (conjugated transposed).</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span></code> operators can’t be defined at the same time.</p></li>
+<li><p>Using <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">transpose_mode</span><span class="o">::</span><span class="n">non_transposed</span></code> for a matrix in <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span></code> operator corresponds to <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">arrangement</span><span class="o">::</span><span class="n">col</span><span class="o">-</span><span class="n">major</span></code> in <a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a> operator.</p></li>
+<li><p>Using <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">transpose_mode</span><span class="o">::</span><span class="n">transposed</span></code> for a matrix in <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span></code> operator corresponds to <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">arrangement</span><span class="o">::</span><span class="n">row</span><span class="o">-</span><span class="n">major</span></code> in <a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a> operator.</p></li>
+<li><p>Using <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">transpose_mode</span><span class="o">::</span><span class="n">conj_transposed</span></code> for a matrix in <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span></code> operator corresponds to <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">arrangement</span><span class="o">::</span><span class="n">row</span><span class="o">-</span><span class="n">major</span></code> in <a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a> operator and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">conjugate</span></code> passed in <a class="reference internal" href="methods.html#execution-methods-label"><span class="std std-ref">execute()</span></a> mathod as transform operator for that matrix.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="leadingdimension-operator">
+<span id="leadingdimension-operator-label"></span><h3>LeadingDimension Operator<a class="headerlink" href="#leadingdimension-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">LeadingDimension</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LDA</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LDB</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LDC</span><span class="o">&gt;</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Defines leading dimensions for matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.
+The leading dimension of a matrix is a stride (in elements) to the beginning of the next column for a column-major matrix
+or the next row for a row-major matrix.</p>
+<p>If <a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a> is used in the description of a <a class="reference internal" href="#function-operator-gemm-label"><span class="std std-ref">general matrix multiplication</span></a>
+operation, in BLAS nomenclature the dimensions of the  <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> matrices can be described in a following way:</p>
+<ul class="simple">
+<li><p>Real dimensions of matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> are <span class="math notranslate nohighlight">\(LDA\times K\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">M</span></code> if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> is column-major, and <span class="math notranslate nohighlight">\(LDA\times M\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">K</span></code> otherwise.</p></li>
+<li><p>Real dimensions of matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> are <span class="math notranslate nohighlight">\(LDB\times N\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">K</span></code> if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> is column-major, and <span class="math notranslate nohighlight">\(LDB\times K\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDB</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">N</span></code> otherwise.</p></li>
+<li><p>Real dimensions of matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> are <span class="math notranslate nohighlight">\(LDC\times N\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDC</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">M</span></code> if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> is column-major, and <span class="math notranslate nohighlight">\(LDC\times M\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDB</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">N</span></code> otherwise.</p></li>
+</ul>
+<p>A matrix can also be described using a layout
+(see <a class="reference external" href="https://github.com/NVIDIA/cutlass/blob/main/media/docs/cute/01_layout.md#cute-layouts">CuTe: Layout</a>), i.e. a pair of
+integer tuples: shape and stride (distance between elements). In simple terms, a shape represents the number of elements in each dimension,
+and stride represents distance between elements in each dimension.</p>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> - matrix of <span class="math notranslate nohighlight">\(M\times K\)</span> shape, with <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">1</span></code> stride in 1st dimension and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span></code> in 2nd dimension if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> is column-major, or with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span></code> in 1st and <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">1</span></code> in 2nd dimension otherwise.</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> - matrix of <span class="math notranslate nohighlight">\(K\times N\)</span> shape, with <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">1</span></code> stride in 1st dimension and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDB</span></code> in 2nd dimension if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> is column-major, or with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDB</span></code> in 1st and <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">1</span></code> in 2nd dimension otherwise.</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> - matrix of <span class="math notranslate nohighlight">\(M\times N\)</span> shape, with <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">1</span></code> stride in 1st dimension and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDC</span></code> in 2nd dimension if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> is column-major, or with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDC</span></code> in 1st and <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">1</span></code> in 2nd dimension otherwise.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">TransposeMode</span></code> operator is deprecated since 0.2.0 and may be removed in future versions.</p>
+</div>
+<p>If <a class="reference internal" href="#transposemode-operator-label"><span class="std std-ref">TransposeMode</span></a> (deprecated) is used in the description of a <a class="reference internal" href="#function-operator-gemm-label"><span class="std std-ref">general matrix multiplication</span></a>
+operation, in BLAS nomenclature the dimensions of the  <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> matrices can be described in a following way:</p>
+<ul class="simple">
+<li><p>Real dimensions of matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> are <span class="math notranslate nohighlight">\(LDA\times K\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">M</span></code> if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> is non-transposed, and <span class="math notranslate nohighlight">\(LDA\times M\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">K</span></code> otherwise.</p></li>
+<li><p>Real dimensions of matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> are <span class="math notranslate nohighlight">\(LDB\times N\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDA</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">K</span></code> if <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> is non-transposed, and <span class="math notranslate nohighlight">\(LDB\times K\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDB</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">N</span></code> otherwise.</p></li>
+<li><p>Real dimensions of matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> are <span class="math notranslate nohighlight">\(LDC\times N\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">LDC</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">M</span></code>.</p></li>
+</ul>
+<p>See also, <a class="reference internal" href="traits.html#suggested-leading-dimension-of-trait-label"><span class="std std-ref">suggested_leading_dimension_of</span></a>.</p>
+</div>
+<div class="section" id="alignment-operator">
+<span id="alignment-operator-label"></span><h3>Alignment Operator<a class="headerlink" href="#alignment-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Alignment</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">AAlignment</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">BAlignment</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">CAlignment</span><span class="o">&gt;</span><span class="p">()</span>
+
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">MaxAlignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Alignment</span><span class="o">&lt;</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span><span class="w"> </span><span class="c1">// alias of maximum supported alignements</span>
+</pre></div>
+</div>
+<p>Defines the alignments (in bytes) of the pointers to matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> (either raw pointers or wrapped in CuTe tensors) that are passed to the <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">execute</span><span class="p">(...)</span></code> method.</p>
+<p>Note that the alignments have direct implication for how much shared memory is required for given a description operator.
+Additionally, it may also impact the performance.</p>
+<p>Requirements:</p>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">AAlignments</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BAlignments</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">CAlignments</span></code> should be powers-of-two and less than or equal to the maximum supported alignments, i.e., 16 bytes.</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">AAlignments</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BAlignments</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">CAlignments</span></code> are multiple of <code class="code highlight cpp docutils literal highlight-cpp"><span class="k">alignof</span><span class="p">(</span><span class="n">BLAS</span><span class="o">::</span><span class="n">a_value_type</span><span class="p">)</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="k">alignof</span><span class="p">(</span><span class="n">BLAS</span><span class="o">::</span><span class="n">b_value_type</span><span class="p">)</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="k">alignof</span><span class="p">(</span><span class="n">BLAS</span><span class="o">::</span><span class="n">c_value_type</span><span class="p">)</span></code>, respectively.</p></li>
+</ul>
+<p>See also, <a class="reference internal" href="traits.html#suggested-alignment-trait-label"><span class="std std-ref">Suggested Alignment Trait</span></a>.</p>
+</div>
+<div class="section" id="function-operator">
+<span id="function-operator-label"></span><h3>Function Operator<a class="headerlink" href="#function-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Function</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">function</span><span class="w"> </span><span class="n">F</span><span class="o">&gt;</span><span class="p">()</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">function</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MM</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Sets the BLAS function to be executed.</p>
+<div class="section" id="general-matrix-multiply">
+<span id="function-operator-gemm-label"></span><h4>General Matrix Multiply<a class="headerlink" href="#general-matrix-multiply" title="Permalink to this heading">¶</a></h4>
+<p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span></code> sets the operation to general matrix multiply, defined as:</p>
+<p><span class="math notranslate nohighlight">\(\mathbf{C}_{m\times n} = {\alpha} \times \mathbf{A}_{m\times k} \times \mathbf{B}_{k\times n} + {\beta} \times \mathbf{C}_{m\times n}\)</span></p>
+<p>where <span class="math notranslate nohighlight">\({\alpha}\)</span> and <span class="math notranslate nohighlight">\({\beta}\)</span> are scalars (real or complex), and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> are matrices
+with dimensions <span class="math notranslate nohighlight">\(A: m\times k\)</span>, <span class="math notranslate nohighlight">\(B: k\times n\)</span>, and <span class="math notranslate nohighlight">\(C: m\times n\)</span>, respectively.</p>
+<p>The matrices can be column-major, row-major, or have a custom layout. See <a class="reference internal" href="methods.html#execution-methods-label"><span class="std std-ref">Execution Methods</span></a>,
+<a class="reference internal" href="other_methods.html#get-layout-other-label"><span class="std std-ref">Get Memory Layout</span></a>, <a class="reference internal" href="other_methods.html#suggest-layout-other-label"><span class="std std-ref">Suggested Shared Memory Layout</span></a>, and <a class="reference internal" href="#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a>.</p>
+</div>
+</div>
+<div class="section" id="sm-operator">
+<span id="sm-operator-label"></span><h3>SM Operator<a class="headerlink" href="#sm-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">SM</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">CC</span><span class="o">&gt;</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Sets the target architecture <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">CC</span></code> for the underlying BLAS function to use. Supported architectures are:</p>
+<ul class="simple">
+<li><p>Volta: <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">700</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">720</span></code> (sm_70, sm_72).</p></li>
+<li><p>Turing: <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">750</span></code> (sm_75).</p></li>
+<li><p>Ampere: <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">800</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">860</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">870</span></code> (sm_80, sm_86, sm_87).</p></li>
+<li><p>Ada: <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">890</span></code> (sm_89).</p></li>
+<li><p>Hopper: <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">900</span></code> (sm_90, sm_90a).</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When compiling cuBLASDx for 9.0a compute capability use <code class="code highlight cpp docutils literal highlight-cpp"><span class="mi">900</span></code> in the <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">SM</span></code> operator (see also <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#feature-availability">CUDA C++ Programming Guide: Feature Availability</a>).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is not guaranteed that executions of exactly the same BLAS function with exactly the same inputs on GPUs of different
+CUDA architectures will produce bit-identical results.</p>
+</div>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="execution-operators">
+<span id="execution-operators-label"></span><h2>Execution Operators<a class="headerlink" href="#execution-operators" title="Permalink to this heading">¶</a></h2>
+<p>Execution operators configure how the function will run on the GPU. Combined with <a class="reference internal" href="#description-operators-label"><span class="std std-ref">Description Operators</span></a>, they form a
+complete function descriptor that can be executed on a GPU.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operator</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#block-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Block</span></code></a></p></td>
+<td><p>Creates block execution object. See <a class="reference internal" href="#block-configuration-operators">Block Configuration Operators</a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="block-operator">
+<span id="block-operator-label"></span><h3>Block Operator<a class="headerlink" href="#block-operator" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Block</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Generates a collective operation to run in a single CUDA block.
+Threads will cooperate to compute the collective operation.
+The layout and the number of threads participating in the execution, can be configured using <a class="reference internal" href="#block-configuration-operators">Block Configuration Operators</a>.</p>
+<p>For example, the following code example creates a function descriptor for GEMM function that will run in a single CUDA block:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="n">__half</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Type</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">TransposeMode</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">N</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Function</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">              </span><span class="o">+</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">Block</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="block-configuration-operators">
+<h3>Block Configuration Operators<a class="headerlink" href="#block-configuration-operators" title="Permalink to this heading">¶</a></h3>
+<p>Block-configuration operators allow the user to configure block size of a single CUDA block.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operators</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#blockdim-operator-label"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="o">&gt;</span></code></a></p></td>
+<td><p>Based on heuristics</p></td>
+<td><p>Number of threads used to perform BLAS function.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Block configuration operators can only be used with <a class="reference internal" href="#block-operator-label"><span class="std std-ref">Block Operator</span></a>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is not guaranteed that executions of exactly the same BLAS function with exactly the same inputs but
+with different</p>
+<ul class="simple">
+<li><p>leading dimensions (<a class="reference internal" href="#leadingdimension-operator-label"><span class="std std-ref">LeadingDimension</span></a>),</p></li>
+<li><p>CUDA architecture (<a class="reference internal" href="#sm-operator-label"><span class="std std-ref">SM</span></a>), or</p></li>
+<li><p>number of threads (<a class="reference internal" href="#blockdim-operator-label"><span class="std std-ref">BlockDim</span></a>)</p></li>
+</ul>
+<p>will produce bit-identical results.</p>
+</div>
+<div class="section" id="blockdim-operator">
+<span id="blockdim-operator-label"></span><h4>BlockDim Operator<a class="headerlink" href="#blockdim-operator" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">cublasdx</span><span class="o">::</span><span class="n">BlockDim</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Z</span><span class="o">&gt;</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Sets the CUDA block size to <code class="code highlight cpp docutils literal highlight-cpp"><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="p">)</span></code> to configure the execution, meaning it sets number of threads participating
+in the execution and their layout.
+Using this operator, user can run the BLAS function in 1D, 2D or 3D block with different number of threads.
+Set block dimension can be accessed via <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BLAS</span><span class="o">::</span><span class="n">block_dim</span></code> trait.</p>
+<p>Adding <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="o">&gt;</span></code> to the description puts the following requirements on the execution of the BLAS function:</p>
+<ul class="simple">
+<li><p>Kernel must be launched with 3D block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span><span class="w"> </span><span class="n">Y1</span><span class="p">,</span><span class="w"> </span><span class="n">Z1</span><span class="p">)</span></code> where <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">X1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">X</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Y1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Y</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Z1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Z</span></code>, also:</p>
+<ul>
+<li><p>For 1D <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span></code> kernel must be launched with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span><span class="w"> </span><span class="n">Y1</span><span class="p">,</span><span class="w"> </span><span class="n">Z1</span><span class="p">)</span></code> where <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">X1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">X</span></code>.</p></li>
+<li><p>For 2D <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="o">&gt;</span></code> kernel must be launched with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y1</span><span class="p">,</span><span class="w"> </span><span class="n">Z1</span><span class="p">)</span></code> where <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Y1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Y</span></code>.</p></li>
+<li><p>For 3D <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="o">&gt;</span></code> kernel must be launched with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z1</span><span class="p">)</span></code> where <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Z1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Z</span></code>.</p></li>
+</ul>
+</li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Z</span></code> threads must be participating in the execution.</p></li>
+<li><p>The participating threads must be consecutive (adjacent) threads.</p></li>
+</ul>
+<p>The listed requirements may be lifted or loosened in the future releases of cuBLASDx.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>cuBLASDx can’t validate all kernel launch configuration at runtime and check that all requirements are met, thus it is
+user responsibility to adhere to the rules listed above. Violating those rules is considered undefined behavior and can lead to
+incorrect results and/or failures.</p>
+</div>
+<div class="hint admonition">
+<p class="admonition-title">Examples</p>
+<div class="line-block">
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">64</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span></code> - OK</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">64</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span></code> - OK</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">64</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span></code> - OK</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span></code> - OK</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span></code> - OK</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span></code> - OK</div>
+<div class="line"><br /></div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">64</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span></code> - INCORRECT</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">64</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span></code> - INCORRECT</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span></code> - INCORRECT</div>
+<div class="line"><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span></code>, kernel launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span></code> - INCORRECT</div>
+</div>
+</div>
+<p>The value of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span></code> can be accessed from BLAS description via <a class="reference internal" href="traits.html#blockdim-block-trait-label"><span class="std std-ref">BLAS::block_dim</span></a> trait.
+When <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span></code> is not set, the default block dimensions are used
+(the default value is <a class="reference internal" href="traits.html#suggestedblockdim-block-trait-label"><span class="std std-ref">BLAS::suggested_block_dim</span></a>).</p>
+<p>If the default block dimensions provided by cuBLASDx is smaller than the ones optimal for a kernel, it may
+still be optimal to try the default before increasing the number of threads contributing to the calculations.</p>
+<div class="attention admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Z</span></code> must be greater than or equal to 32.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>It’s recommended that <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Z</span></code> is 32, 64, 128, 256, 512, or 1024.</p></li>
+<li><p>It’s recommended that <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Z</span></code> is a multiple of 32.</p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="traits.html" class="btn btn-neutral float-right" title="Traits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+
+<p style="color: gray;">
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" style="color: inherit;">Privacy Policy</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/" target="_blank" style="color: inherit;">Manage My Privacy</a>
+|
+<a href="https://www.nvidia.com/en-us/preferences/start/" target="_blank" style="color: inherit;">Do Not Sell or Share My Data</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/" target="_blank" style="color: inherit;">Terms of Service</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/accessibility/" target="_blank" style="color: inherit;">Accessibility</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/company-policies/" target="_blank" style="color: inherit;">Corporate Policies</a>
+|
+<a href="https://www.nvidia.com/en-us/product-security/" target="_blank" style="color: inherit;">Product Security</a>
+|
+<a href="https://www.nvidia.com/en-us/contact/" target="_blank" style="color: inherit;">Contact</a>
+</p>
+
+<p>
+  Copyright &#169; 2022-2024, NVIDIA Corporation &amp; Affiliates. All rights reserved.
+</p>
+
+    <p></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+  a:link, a:visited {
+    color: #76b900;
+  }
+
+  a:hover {
+    color: #8c0;
+  }
+
+  .rst-content dl:not(.docutils) dt {
+    background: rgba(118, 185, 0, 0.1);
+    color: rgba(59,93,0,1);
+    border-top: solid 3px rgba(59,93,0,1);
+  }
+  </style>
+  
+
+</body>
+</html>

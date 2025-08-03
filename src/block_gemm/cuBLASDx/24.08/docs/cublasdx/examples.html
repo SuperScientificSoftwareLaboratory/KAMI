@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; cuBLASDx 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/cublasdx_override.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Release Notes" href="release_notes.html" />
+    <link rel="prev" title="Other" href="api/other.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" > 
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cuBLASDx
+          </a>
+              <div class="version">
+                0.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #76b900;
+    }
+
+    .wy-side-nav-search a:link, .wy-nav-top a:link {
+      color: #fff;
+    }
+    .wy-side-nav-search a:visited, .wy-nav-top a:visited {
+      color: #fff;
+    }
+    .wy-side-nav-search a:hover, .wy-nav-top a:hover {
+      color: #fff;
+    }
+
+    .wy-menu-vertical a:link, .wy-menu-vertical a:visited {
+      color: #d9d9d9
+    }
+
+    .wy-menu-vertical a:active {
+      background-color: #76b900
+    }
+
+    .wy-side-nav-search>div.version {
+      color: rgba(0, 0, 0, 0.3)
+    }
+
+    /* override table width restrictions */
+    .wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+    }
+
+    .wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+    }
+  </style>
+  
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Documentation home</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="requirements_func.html">Requirements and Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requirements_func.html#supported-compilers">Supported Compilers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#supported-functionality">Supported Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#supported-gemm-data-types">Supported GEMM Data Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Quick Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-project">cuBLASDx In Your Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-cmake-project">cuBLASDx In Your CMake Project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#using-custom-cutlass">Using Custom CUTLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#defined-variables">Defined Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction1.html">General Matrix Multiply Using cuBLASDx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#defining-gemm-operation">Defining GEMM Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#executing-gemm">Executing GEMM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction1.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction1.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#launching-gemm-kernel">Launching GEMM Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#compilation">Compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Achieving High Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#general-advice">General Advice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#matrix-layouts">Matrix Layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#memory-management">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#advanced">Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#further-reading">Further Reading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/operators.html">Operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#description-operators">Description Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#size-operator">Size Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#type-operator">Type Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#precision-operator">Precision Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#arrangement-operator">Arrangement Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#transposemode-operator">TransposeMode Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#leadingdimension-operator">LeadingDimension Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#alignment-operator">Alignment Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#function-operator">Function Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#sm-operator">SM Operator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#execution-operators">Execution Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-operator">Block Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-configuration-operators">Block Configuration Operators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/traits.html">Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#description-traits">Description Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#size-trait">Size Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#type-trait">Type Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#precision-trait">Precision Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#function-trait">Function Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#arrangement-trait">Arrangement Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#transpose-mode-trait">Transpose Mode Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#alignment-trait">Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-alignment-trait">Suggested Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#sm-trait">SM Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-trait">is_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-execution-trait">is_blas_execution Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-trait">is_complete_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-execution-trait">is_complete_blas_execution Trait</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#execution-traits">Execution Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#block-traits">Block Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#other-traits">Other Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-supported">is_supported</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-leading-dimension-of">suggested_leading_dimension_of</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/methods.html">Execution Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/methods.html#block-execute-method">Block Execute Method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#value-format">Value Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#input-output-data-format">Input/Output Data Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#shared-memory-usage">Shared Memory Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other_methods.html">Other Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#shared-memory-slicing">Shared Memory Slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#get-memory-layout">Get Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#suggested-shared-memory-layout">Suggested Shared Memory Layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other.html">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor">Tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction-examples">Introduction Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-gemm-examples">Simple GEMM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nvrtc-examples">NVRTC Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gemm-performance">GEMM Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-examples">Advanced Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id1">0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id2">0.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id4">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Software License Agreement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#third-party-license-agreements">Third Party License Agreements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="license.html#cutlass">CUTLASS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cuBLASDx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="examples">
+<span id="examples-label"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h1>
+<p>The cuBLASDx library provides multiple block-level BLAS samples covering basic GEMM operations with various
+precisions and types, as well as a few special examples that highlight performance benefits of cuBLASDx.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 16%" />
+<col style="width: 20%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="4"><p>Examples</p></th>
+</tr>
+<tr class="row-even"><th class="head" colspan="2"><p>Group</p></th>
+<th class="head" rowspan="2"><p>Example</p></th>
+<th class="head" rowspan="2"><p>Description</p></th>
+</tr>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Subgroup</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td colspan="2"><p>Introduction Examples</p></td>
+<td><p>introduction_example</p></td>
+<td><p>cuBLASDx API introduction example</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="9"><p>Simple GEMM Examples</p></td>
+<td rowspan="4"><p>Basic Example</p></td>
+<td><p>simple_gemm_fp32</p></td>
+<td><p>Performs fp32 GEMM</p></td>
+</tr>
+<tr class="row-even"><td><p>simple_gemm_cfp16</p></td>
+<td><p>Performs complex fp16 GEMM</p></td>
+</tr>
+<tr class="row-odd"><td><p>simple_gemm_fp8</p></td>
+<td><p>Performs fp8 GEMM</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p>Extra Examples</p></td>
+<td><p>simple_gemm_leading_dimensions</p></td>
+<td><p>Performs GEMM with non-default leading dimensions</p></td>
+</tr>
+<tr class="row-even"><td><p>simple_gemm_std_complex_fp32</p></td>
+<td><p>Performs GEMM with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cuda</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span></code> as data type</p></td>
+</tr>
+<tr class="row-odd"><td><p>simple_gemm_mixed_precision</p></td>
+<td><p>Performs GEMM with different data type for matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>simple_gemm_transform</p></td>
+<td><p>Performs GEMM with transform operators</p></td>
+</tr>
+<tr class="row-odd"><td><p>simple_gemm_custom_layout</p></td>
+<td><p>Performs GEMM with custom matrix layouts</p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>NVRTC Examples</p></td>
+<td><p>nvrtc_gemm</p></td>
+<td><p>Performs GEMM, kernel is compiled using NVRTC</p></td>
+</tr>
+<tr class="row-odd"><td colspan="2" rowspan="3"><p>GEMM Performance</p></td>
+<td><p>single_gemm_performance</p></td>
+<td><p>Benchmark for single GEMM</p></td>
+</tr>
+<tr class="row-even"><td><p>fused_gemm_performance</p></td>
+<td><p>Benchmark for 2 GEMMs fused into a single kernel</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td rowspan="11"><p>Advanced Examples</p></td>
+<td rowspan="5"><p>Fusion</p></td>
+<td><p>fused_gemm</p></td>
+<td><p>Performs 2 GEMMs in a single kernel</p></td>
+</tr>
+<tr class="row-odd"><td><p>gemm_fft</p></td>
+<td><p>Perform GEMM and FFT in a single kernel</p></td>
+</tr>
+<tr class="row-even"><td><p>gemm_fft_fp16</p></td>
+<td><p>Perform GEMM and FFT in a single kernel (half-precision complex type)</p></td>
+</tr>
+<tr class="row-odd"><td><p>gemm_fft_performance</p></td>
+<td><p>Benchmark for GEMM and FFT fused into a single kernel</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p>Deep Learning</p></td>
+<td><p>scaled_dot_prod_attn</p></td>
+<td><p>Scaled dot product attention using cuBLASDx</p></td>
+</tr>
+<tr class="row-even"><td><p>scaled_dot_prod_attn_batched</p></td>
+<td><p>Multi-head attention using cuBLASDx</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><p>Other</p></td>
+<td><p>multiblock_gemm</p></td>
+<td><p>Proof-of-concept for single large GEMM using multiple CUDA blocks</p></td>
+</tr>
+<tr class="row-odd"><td><p>batched_gemm_fp64</p></td>
+<td><p>Manual batching in a single CUDA block</p></td>
+</tr>
+<tr class="row-even"><td><p>blockdim_gemm_fp16</p></td>
+<td><p>BLAS execution with different block dimensions</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="introduction-examples">
+<span id="examples-introduction-examples-label"></span><h2>Introduction Examples<a class="headerlink" href="#introduction-examples" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">introduction_example</span></code></p></li>
+</ul>
+<p>Introduction examples are used in the documentation to explain basics of the cuBLASDx library and its API. <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">introduction_example</span></code>
+is used in the beginner’s guide to run GEMM with cuBLASDx API: <a class="reference internal" href="introduction1.html#intro1-label"><span class="std std-ref">General Matrix Multiply Using cuBLASDx</span></a>.</p>
+</div>
+<div class="section" id="simple-gemm-examples">
+<span id="examples-simple-examples-label"></span><h2>Simple GEMM Examples<a class="headerlink" href="#simple-gemm-examples" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_fp32</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_cfp16</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_fp8</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_leading_dimensions</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_std_complex_fp32</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_mixed_precision</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_transform</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_custom_layout</span></code></p></li>
+</ul>
+<p>In each of the examples listed above a general matrix multiply (<a class="reference internal" href="api/operators.html#function-operator-gemm-label"><span class="std std-ref">GEMM</span></a>) operation is performed in a CUDA block.
+The examples show how to create a complete BLAS description, allocate memory, set block dimensions and the necessary amount of shared memory.
+The input data (matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>) is generated on the host, copied into a device buffer, and loaded into the shared memory.
+The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">execute</span><span class="p">()</span></code> calculates GEMM and stores the results in matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>, then they are copied into the global memory, and finally back to
+the host.
+The results are verified against cuBLAS.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_leading_dimensions</span></code> shows how to set static (compile-time) leading dimensions for matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>
+via <a class="reference internal" href="api/operators.html#leadingdimension-operator-label"><span class="std std-ref">LeadingDimension</span></a> operator.
+For performance reasons, it is recommended to try suggested leading dimensions using <a class="reference internal" href="api/traits.html#suggested-leading-dimension-of-trait-label"><span class="std std-ref">suggested_leading_dimension_of</span></a>.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_std_complex_fp32</span></code> example proves that cuBLASDx accepts matrices of types different than <a class="reference internal" href="api/traits.html#valuetype-block-trait-label"><span class="std std-ref">BLAS::a_value_type</span></a>, <a class="reference internal" href="api/traits.html#valuetype-block-trait-label"><span class="std std-ref">BLAS::b_value_type</span></a>, and <a class="reference internal" href="api/traits.html#valuetype-block-trait-label"><span class="std std-ref">BLAS::c_value_type</span></a>. In this cases, it is the complex type from CUDA C++ Standard Library - <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cuda</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span></code>, but it could be <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">float2</span></code> provided by CUDA too.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_mixed_precision</span></code> example shows how to compute an mixed-precision GEMM, where matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> have data of different precisions. Note that the scales <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">alpha</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">beta</span></code> are expected to have the same precision and type as the matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> elements.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_transform</span></code> example shows how to compute GEMM with transform operators <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">a_load_op</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">b_load_op</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">c_load_op</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">c_store_opt</span></code> that are applied element-wisely when loading matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> and storing matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>, respectively.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">simple_gemm_custom_layout</span></code> example shows how to compute a GEMM, where matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> in shared memory use custom CuTe layouts.</p>
+</div>
+<div class="section" id="nvrtc-examples">
+<h2>NVRTC Examples<a class="headerlink" href="#nvrtc-examples" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">nvrtc_gemm</span></code></p></li>
+</ul>
+<p>The NVRTC example presents how to use cuBLASDx with NVRTC runtime compilation to perform a GEMM.
+The BLAS descriptions created with cuBLASDx operators are defined only in the device code.
+The header file <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="p">.</span><span class="n">hpp</span></code> is also included only in the device code that’s passed to the NVRTC.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since version 0.0.1 cuBLASDx has an experimental support for compilation with <a class="reference external" href="https://docs.nvidia.com/cuda/nvrtc/index.html">NVRTC</a>.
+See <a class="reference internal" href="requirements_func.html#requirements-label"><span class="std std-ref">Requirements and Functionality</span></a> section.</p>
+</div>
+</div>
+<div class="section" id="gemm-performance">
+<h2>GEMM Performance<a class="headerlink" href="#gemm-performance" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">single_gemm_performance</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">fused_gemm_performance</span></code></p></li>
+</ul>
+<p>The examples listed above illustrate the performance of cuBLASDx.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">single_gemm_performance</span></code> program presents the performance of cuBLASDx device function executing a general matrix multiply
+(<a class="reference internal" href="api/operators.html#function-operator-gemm-label"><span class="std std-ref">GEMM</span></a>) function. Users can easily modify this sample to test the performance
+of a particular GEMM they need.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">fused_gemm_performance</span></code> example shows the performance of two GEMM operations fused together into a single kernel.
+The kernel execution time is compared against the time cuBLAS requires to do the same calculations.
+In both cases, the measured operation is run multiple times and the average speed is reported.</p>
+</div>
+<div class="section" id="advanced-examples">
+<h2>Advanced Examples<a class="headerlink" href="#advanced-examples" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">multiblock_gemm</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fusion</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fft</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fft_fp16</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fft_performance</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">scaled_dot_prod_attn</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">scaled_dot_prod_attn_batched</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">batched_gemm_fp64</span></code></p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">blockdim_gemm_fp16</span></code></p></li>
+</ul>
+<p>The advanced cuBLASDx examples are there to show how cuBLASDx can be utilized to improve performance by fusing many
+calculations into a single kernel, which ultimately means less global memory accesses.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">multiblock_gemm</span></code> example is proof-of-concept code to execute a GEMM operation using multiple CUDA blocks in cuBLASDx, which
+is useful when the matrices don’t fit into shared memory or to introduce more parallelism. Users can experiment with the problem
+size, precision, data type, local block size, etc. and understand the effect on performance.</p>
+<p>Examples <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fusion</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fft</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fft_fp16</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">gemm_fft_performance</span></code> present how to fuse multiple GEMMs or a GEMM and
+an FFT together in one kernel. It might be especially useful for pipelines with a lot of the small input matrices as Dx libraries
+can be easily adapted to batched execution by launching many CUDA blocks in a grid.</p>
+<p>The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">scaled_dot_prod_attn</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">scaled_dot_prod_attn_batched</span></code> examples explore the areas of deep learning and natural language processing,
+showcasing the implementations of scaled dot-product attention and multi-head attention (MHA) algorithms.
+The performance of half precision MHA in <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">scaled_dot_prod_attn_batched</span></code> example was compared with PyTorch’s <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">scaled_dot_product_attention</span></code>
+function on H100 PCIe 80GB and the results are presented in <a class="reference internal" href="#examples-mha-cublasdx-pytorch-img"><span class="std std-numref">Fig. 1</span></a>.</p>
+<div class="figure align-center" id="id1" style="width: 900px">
+<span id="examples-mha-cublasdx-pytorch-img"></span><a class="reference internal image-reference" href="_images/mha_cublasdx_pytorch.svg"><img alt="Multi-Head Attention (half precision) performance with PyTorch and cuBLASDx on H100 PCIe 80GB with maximum clocks set." src="_images/mha_cublasdx_pytorch.svg" width="700" /></a>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Comparison of Multi-Head Attention algorithm was performed between PyTorch (light blue) and cuBLASDx (green) on H100 PCIe 80GB with
+maximum clocks set.
+The chart presents speed-ups of cuBLASDx over PyTorch’s <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">scaled_dot_product_attention</span></code> function for sequences
+of different lengths and the batch size set to 64. Both input data and computations were in half precision (fp16).
+<a class="reference external" href="https://docs.nvidia.com/deeplearning/frameworks/pytorch-release-notes/rel-23-04.html#rel-23-04">NVIDIA PyTorch container image 23.04</a>
+was used for PyTorch performance evaluation.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>Examples <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">batched_gemm_fp64</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">blockdim_gemm_fp16</span></code> demonstrate the uses of <a class="reference internal" href="api/operators.html#blockdim-operator-label"><span class="std std-ref">BlockDim</span></a> operator.
+In <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">batched_gemm_fp64</span></code> adding 1D <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span></code> to a BLAS description and launching kernel with 2D block dimensions allow for manual
+batching of GEMMs in a single CUDA block (in contrast to batching by launching multiple blocks in a grid).
+<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">blockdim_gemm_fp16</span></code> includes multiple scenarios which present how to safely and correctly execute BLAS operation when kernel is
+launched with block dimensions different from the layout and the number of threads specified in <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api/other.html" class="btn btn-neutral float-left" title="Other" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="release_notes.html" class="btn btn-neutral float-right" title="Release Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+
+<p style="color: gray;">
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" style="color: inherit;">Privacy Policy</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/" target="_blank" style="color: inherit;">Manage My Privacy</a>
+|
+<a href="https://www.nvidia.com/en-us/preferences/start/" target="_blank" style="color: inherit;">Do Not Sell or Share My Data</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/" target="_blank" style="color: inherit;">Terms of Service</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/accessibility/" target="_blank" style="color: inherit;">Accessibility</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/company-policies/" target="_blank" style="color: inherit;">Corporate Policies</a>
+|
+<a href="https://www.nvidia.com/en-us/product-security/" target="_blank" style="color: inherit;">Product Security</a>
+|
+<a href="https://www.nvidia.com/en-us/contact/" target="_blank" style="color: inherit;">Contact</a>
+</p>
+
+<p>
+  Copyright &#169; 2022-2024, NVIDIA Corporation &amp; Affiliates. All rights reserved.
+</p>
+
+    <p></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+  a:link, a:visited {
+    color: #76b900;
+  }
+
+  a:hover {
+    color: #8c0;
+  }
+
+  .rst-content dl:not(.docutils) dt {
+    background: rgba(118, 185, 0, 0.1);
+    color: rgba(59,93,0,1);
+    border-top: solid 3px rgba(59,93,0,1);
+  }
+  </style>
+  
+
+</body>
+</html>

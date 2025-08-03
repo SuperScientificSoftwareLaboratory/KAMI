@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Requirements and Functionality &mdash; cuBLASDx 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/cublasdx_override.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Installation Guide" href="installation.html" />
+    <link rel="prev" title="NVIDIA cuBLASDx" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" > 
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cuBLASDx
+          </a>
+              <div class="version">
+                0.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #76b900;
+    }
+
+    .wy-side-nav-search a:link, .wy-nav-top a:link {
+      color: #fff;
+    }
+    .wy-side-nav-search a:visited, .wy-nav-top a:visited {
+      color: #fff;
+    }
+    .wy-side-nav-search a:hover, .wy-nav-top a:hover {
+      color: #fff;
+    }
+
+    .wy-menu-vertical a:link, .wy-menu-vertical a:visited {
+      color: #d9d9d9
+    }
+
+    .wy-menu-vertical a:active {
+      background-color: #76b900
+    }
+
+    .wy-side-nav-search>div.version {
+      color: rgba(0, 0, 0, 0.3)
+    }
+
+    /* override table width restrictions */
+    .wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+    }
+
+    .wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+    }
+  </style>
+  
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Documentation home</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Requirements and Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#supported-compilers">Supported Compilers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-functionality">Supported Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-gemm-data-types">Supported GEMM Data Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Quick Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-project">cuBLASDx In Your Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-cmake-project">cuBLASDx In Your CMake Project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#using-custom-cutlass">Using Custom CUTLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#defined-variables">Defined Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction1.html">General Matrix Multiply Using cuBLASDx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#defining-gemm-operation">Defining GEMM Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#executing-gemm">Executing GEMM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction1.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction1.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#launching-gemm-kernel">Launching GEMM Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#compilation">Compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Achieving High Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#general-advice">General Advice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#matrix-layouts">Matrix Layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#memory-management">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#advanced">Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#further-reading">Further Reading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/operators.html">Operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#description-operators">Description Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#size-operator">Size Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#type-operator">Type Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#precision-operator">Precision Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#arrangement-operator">Arrangement Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#transposemode-operator">TransposeMode Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#leadingdimension-operator">LeadingDimension Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#alignment-operator">Alignment Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#function-operator">Function Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#sm-operator">SM Operator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#execution-operators">Execution Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-operator">Block Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-configuration-operators">Block Configuration Operators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/traits.html">Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#description-traits">Description Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#size-trait">Size Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#type-trait">Type Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#precision-trait">Precision Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#function-trait">Function Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#arrangement-trait">Arrangement Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#transpose-mode-trait">Transpose Mode Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#alignment-trait">Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-alignment-trait">Suggested Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#sm-trait">SM Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-trait">is_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-execution-trait">is_blas_execution Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-trait">is_complete_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-execution-trait">is_complete_blas_execution Trait</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#execution-traits">Execution Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#block-traits">Block Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#other-traits">Other Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-supported">is_supported</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-leading-dimension-of">suggested_leading_dimension_of</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/methods.html">Execution Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/methods.html#block-execute-method">Block Execute Method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#value-format">Value Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#input-output-data-format">Input/Output Data Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#shared-memory-usage">Shared Memory Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other_methods.html">Other Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#shared-memory-slicing">Shared Memory Slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#get-memory-layout">Get Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#suggested-shared-memory-layout">Suggested Shared Memory Layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other.html">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor">Tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#introduction-examples">Introduction Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#simple-gemm-examples">Simple GEMM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#nvrtc-examples">NVRTC Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#gemm-performance">GEMM Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id1">0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id2">0.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id4">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Software License Agreement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#third-party-license-agreements">Third Party License Agreements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="license.html#cutlass">CUTLASS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cuBLASDx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Requirements and Functionality</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="requirements-and-functionality">
+<span id="requirements-label"></span><h1>Requirements and Functionality<a class="headerlink" href="#requirements-and-functionality" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<p>cuBLASDx is a CUDA C++ header only library. Therefore, the list of required software to use the library is relatively small:</p>
+<ul class="simple">
+<li><p>CUDA Toolkit 11.4 or newer</p></li>
+<li><p>Supported CUDA compiler (C++17 required)</p></li>
+<li><p>Supported host compiler (C++17 required)</p></li>
+<li><p>(Optionally) CMake (version 3.18 or greater)</p></li>
+</ul>
+<p>Dependencies:</p>
+<ul class="simple">
+<li><p>commonDx (shipped with MathDx package)</p></li>
+<li><p>CUTLASS 3.5.1 or newer (CUTLASS 3.5.1 shipped with MathDx package)</p></li>
+</ul>
+<div class="section" id="supported-compilers">
+<h3>Supported Compilers<a class="headerlink" href="#supported-compilers" title="Permalink to this heading">¶</a></h3>
+<p><strong>CUDA Compilers:</strong></p>
+<ul class="simple">
+<li><p>NVCC 11.4.152+ (CUDA Toolkit 11.4 or newer)</p></li>
+<li><p>(Experimental support) NVRTC 11.4.152+ (CUDA Toolkit 11.4 or newer)</p></li>
+</ul>
+<p><strong>Host / C++ Compilers:</strong></p>
+<ul class="simple">
+<li><p>GCC 7+</p></li>
+<li><p>Clang 9+ (only on Linux/WSL2)</p></li>
+<li><p>HPC SDK nvc++ 23.1+</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We recommended always using the latest <a class="reference external" href="https://developer.nvidia.com/cuda-toolkit">CUDA Toolkit</a> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">NVCC</span></code> compiler, and GCC 9+.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Compiling cuBLASDx on Windows with MSVC has not been tested and is not supported yet. However, it’s possible to compile
+kernels with cuBLASDx on Windows using NVRTC as presented in one of the examples.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>cuBLASDx emits errors for unsupported versions of C++ standard, which can be silenced by defining <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">CUBLASDX_IGNORE_DEPRECATED_DIALECT</span></code>
+during compilation. cuBLASDx is not guaranteed to work with versions of C++ standard that are not supported in cuBLASDx.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Because of a known GCC issue, cuBLASDx only supports NVCC 11.6+ if the host compiler is GCC 11+. In addition, we recommend using NVCC 12.3+ when running kernels on Volta and Turing architectures to avoid a known compiler bug that leads to wrong results for certain use-cases.</p>
+</div>
+</div>
+</div>
+<div class="section" id="supported-functionality">
+<span id="functionality-label"></span><h2>Supported Functionality<a class="headerlink" href="#supported-functionality" title="Permalink to this heading">¶</a></h2>
+<p>This is an Early Access (EA) version of cuBLASDx. The current functionality of the library is a subset of the capabilities
+cuBLASDx will have on the first release.</p>
+<p>Supported features include:</p>
+<ul class="simple">
+<li><p>Creating block descriptors that run <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code> - general matrix multiply routine: <span class="math notranslate nohighlight">\(\mathbf{C}_{m\times n} = {\alpha} \times \mathbf{A}_{m\times k} \times \mathbf{B}_{k\times n} + {\beta} \times \mathbf{C}_{m\times n}\)</span>. See <a class="reference internal" href="api/operators.html#block-operator-label"><span class="std std-ref">Block Operator</span></a>.</p></li>
+<li><p>Automatic use of Tensor Cores.</p></li>
+<li><p>Bi-directional information flow, from the user to the descriptor via <a class="reference internal" href="api/operators.html#operators-label"><span class="std std-ref">Operators</span></a> and from the descriptor to the user via <a class="reference internal" href="api/traits.html#traits-label"><span class="std std-ref">Traits</span></a>.</p></li>
+<li><p>Targeting specific GPU architectures using the <a class="reference internal" href="api/operators.html#sm-operator-label"><span class="std std-ref">SM Operator</span></a>. This enables users to configure the descriptor with suggested parameters to target performance.</p></li>
+</ul>
+<p>cuBLASDx supports all GEMM sizes defined by <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">m</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">n</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">k</span></code> dimensions that can fit into the shared memory, meaning matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>,
+and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> have to fit into the shared memory to perform computations. Maximum amount of shared memory per CUDA thread block can be found
+in <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications-technical-specifications-per-compute-capability">CUDA C Programming Guide</a>.</p>
+<p>cuBLASDx supports calculations with 2 types: real and complex, in 7 floating point precisions: half (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__half</span></code>), single (<code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">float</span></code>), double (<code class="code highlight cpp docutils literal highlight-cpp"><span class="kt">double</span></code>), fp8_e4m3 (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_fp8_e4m3</span></code>), fp8_e5m2 (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_fp8_e5m2</span></code>), bf16 (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__nv_bfloat16</span></code>), and tf32 (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tfloat32_t</span></code>).
+The memory layout of each matrix can be in either in column-major or row-major order.</p>
+<p>Below you can find a table presenting maximal supported sizes for three commonly-used floating point precisions (half, single, and double) and type (real or complex) assuming <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">m</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">n</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">k</span></code> dimensions are equal, and precisions of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> are the same.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 43%" />
+<col style="width: 18%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Type, Precision of A/B/C</p></th>
+<th class="head"><p>Architecture</p></th>
+<th class="head"><p>Max Size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td rowspan="20"><p>GEMM</p></td>
+<td rowspan="5"><ul class="simple">
+<li><p>Real, half</p></li>
+</ul>
+</td>
+<td><p>70, 72</p></td>
+<td><p>128</p></td>
+</tr>
+<tr class="row-odd"><td><p>75</p></td>
+<td><p>104</p></td>
+</tr>
+<tr class="row-even"><td><p>80, 87</p></td>
+<td><p>166</p></td>
+</tr>
+<tr class="row-odd"><td><p>86, 89</p></td>
+<td><p>129</p></td>
+</tr>
+<tr class="row-even"><td><p>90</p></td>
+<td><p>196</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><ul class="simple">
+<li><p>Real, float</p></li>
+<li><p>Complex, half</p></li>
+</ul>
+</td>
+<td><p>70, 72</p></td>
+<td><p>90</p></td>
+</tr>
+<tr class="row-even"><td><p>75</p></td>
+<td><p>73</p></td>
+</tr>
+<tr class="row-odd"><td><p>80, 87</p></td>
+<td><p>117</p></td>
+</tr>
+<tr class="row-even"><td><p>86, 89</p></td>
+<td><p>91</p></td>
+</tr>
+<tr class="row-odd"><td><p>90</p></td>
+<td><p>139</p></td>
+</tr>
+<tr class="row-even"><td rowspan="5"><ul class="simple">
+<li><p>Real, double</p></li>
+<li><p>Complex, float</p></li>
+</ul>
+</td>
+<td><p>70, 72</p></td>
+<td><p>64</p></td>
+</tr>
+<tr class="row-odd"><td><p>75</p></td>
+<td><p>52</p></td>
+</tr>
+<tr class="row-even"><td><p>80, 87</p></td>
+<td><p>83</p></td>
+</tr>
+<tr class="row-odd"><td><p>86, 89</p></td>
+<td><p>64</p></td>
+</tr>
+<tr class="row-even"><td><p>90</p></td>
+<td><p>98</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><ul class="simple">
+<li><p>Complex, double</p></li>
+</ul>
+</td>
+<td><p>70, 72</p></td>
+<td><p>45</p></td>
+</tr>
+<tr class="row-even"><td><p>75</p></td>
+<td><p>36</p></td>
+</tr>
+<tr class="row-odd"><td><p>80, 87</p></td>
+<td><p>58</p></td>
+</tr>
+<tr class="row-even"><td><p>86, 89</p></td>
+<td><p>45</p></td>
+</tr>
+<tr class="row-odd"><td><p>90</p></td>
+<td><p>69</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="supported-gemm-data-types">
+<span id="mixed-precision-label"></span><h2>Supported GEMM Data Types<a class="headerlink" href="#supported-gemm-data-types" title="Permalink to this heading">¶</a></h2>
+<p>Starting from cuBLASDx 0.2.0, matrix multiplication of different precisions of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> is supported.
+The table below lists the supported precisions of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>.
+The type and precision of the scales, i.e., <span class="math notranslate nohighlight">\({\alpha}\)</span> and <span class="math notranslate nohighlight">\({\beta}\)</span>, are expected to be the same as those of matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>,
+and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span><span class="o">/</span><span class="n">B</span><span class="o">/</span><span class="n">C</span></code> has to be of either all real, or all complex data type.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Precision A</p></th>
+<th class="head"><p>Precision B</p></th>
+<th class="head"><p>Precision C</p></th>
+<th class="head"><p>Note</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>fp8_e4m3</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>float</p></td>
+<td><p>MMA, SM89+</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e4m3</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>float</p></td>
+<td><p>MMA, SM89+</p></td>
+</tr>
+<tr class="row-even"><td><p>fp8_e5m2</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>float</p></td>
+<td><p>MMA, SM89+</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e5m2</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>float</p></td>
+<td><p>MMA, SM89+</p></td>
+</tr>
+<tr class="row-even"><td><p>half</p></td>
+<td><p>half</p></td>
+<td><p>half</p></td>
+<td><p>MMA</p></td>
+</tr>
+<tr class="row-odd"><td><p>half</p></td>
+<td><p>half</p></td>
+<td><p>float</p></td>
+<td><p>MMA</p></td>
+</tr>
+<tr class="row-even"><td><p>bf16</p></td>
+<td><p>bf16</p></td>
+<td><p>float</p></td>
+<td><p>MMA</p></td>
+</tr>
+<tr class="row-odd"><td><p>tf32</p></td>
+<td><p>tf32</p></td>
+<td><p>float</p></td>
+<td><p>MMA</p></td>
+</tr>
+<tr class="row-even"><td><p>double</p></td>
+<td><p>double</p></td>
+<td><p>double</p></td>
+<td><p>MMA</p></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e4m3</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>half</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fp8_e4m3</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>bf16</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e4m3</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fp8_e4m3</p></td>
+<td><p>float</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e4m3</p></td>
+<td><p>float</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fp8_e4m3</p></td>
+<td><p>double</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e5m2</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>half</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fp8_e5m2</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>bf16</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e5m2</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fp8_e5m2</p></td>
+<td><p>float</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fp8_e5m2</p></td>
+<td><p>float</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fp8_e5m2</p></td>
+<td><p>double</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>half</p></td>
+<td><p>half</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>half</p></td>
+<td><p>float</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>half</p></td>
+<td><p>float</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>half</p></td>
+<td><p>double</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>bf16</p></td>
+<td><p>bf16</p></td>
+<td><p>bf16</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>bf16</p></td>
+<td><p>bf16</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>bf16</p></td>
+<td><p>float</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>bf16</p></td>
+<td><p>float</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>bf16</p></td>
+<td><p>double</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>tf32</p></td>
+<td><p>tf32</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>tf32</p></td>
+<td><p>float</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>tf32</p></td>
+<td><p>float</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>tf32</p></td>
+<td><p>double</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>float</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>float</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>half</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>float</p></td>
+<td><p>half</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>bf16</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>float</p></td>
+<td><p>bf16</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>tf32</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>float</p></td>
+<td><p>tf32</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>float</p></td>
+<td><p>float</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>float</p></td>
+<td><p>float</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>double</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>double</p></td>
+<td><p>fp8_e5m2</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>double</p></td>
+<td><p>fp8_e4m3</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>double</p></td>
+<td><p>half</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>double</p></td>
+<td><p>bf16</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>double</p></td>
+<td><p>tf32</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>double</p></td>
+<td><p>float</p></td>
+<td><p>double</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If an MMA exists for the combination of precisions of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> cuBLASDx will use the MMA instruction automatically on the supported GPU architectures.
+Otherwise, cuBLASDx will use an FMA instruction and there are no performance guarantees.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="NVIDIA cuBLASDx" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Quick Installation Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+
+<p style="color: gray;">
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" style="color: inherit;">Privacy Policy</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/" target="_blank" style="color: inherit;">Manage My Privacy</a>
+|
+<a href="https://www.nvidia.com/en-us/preferences/start/" target="_blank" style="color: inherit;">Do Not Sell or Share My Data</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/" target="_blank" style="color: inherit;">Terms of Service</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/accessibility/" target="_blank" style="color: inherit;">Accessibility</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/company-policies/" target="_blank" style="color: inherit;">Corporate Policies</a>
+|
+<a href="https://www.nvidia.com/en-us/product-security/" target="_blank" style="color: inherit;">Product Security</a>
+|
+<a href="https://www.nvidia.com/en-us/contact/" target="_blank" style="color: inherit;">Contact</a>
+</p>
+
+<p>
+  Copyright &#169; 2022-2024, NVIDIA Corporation &amp; Affiliates. All rights reserved.
+</p>
+
+    <p></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+  a:link, a:visited {
+    color: #76b900;
+  }
+
+  a:hover {
+    color: #8c0;
+  }
+
+  .rst-content dl:not(.docutils) dt {
+    background: rgba(118, 185, 0, 0.1);
+    color: rgba(59,93,0,1);
+    border-top: solid 3px rgba(59,93,0,1);
+  }
+  </style>
+  
+
+</body>
+</html>

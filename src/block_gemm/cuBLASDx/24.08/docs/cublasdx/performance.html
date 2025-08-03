@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Achieving High Performance &mdash; cuBLASDx 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/cublasdx_override.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API reference" href="api/index.html" />
+    <link rel="prev" title="General Matrix Multiply Using cuBLASDx" href="introduction1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" > 
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cuBLASDx
+          </a>
+              <div class="version">
+                0.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #76b900;
+    }
+
+    .wy-side-nav-search a:link, .wy-nav-top a:link {
+      color: #fff;
+    }
+    .wy-side-nav-search a:visited, .wy-nav-top a:visited {
+      color: #fff;
+    }
+    .wy-side-nav-search a:hover, .wy-nav-top a:hover {
+      color: #fff;
+    }
+
+    .wy-menu-vertical a:link, .wy-menu-vertical a:visited {
+      color: #d9d9d9
+    }
+
+    .wy-menu-vertical a:active {
+      background-color: #76b900
+    }
+
+    .wy-side-nav-search>div.version {
+      color: rgba(0, 0, 0, 0.3)
+    }
+
+    /* override table width restrictions */
+    .wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+    }
+
+    .wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+    }
+  </style>
+  
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Documentation home</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="requirements_func.html">Requirements and Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requirements_func.html#supported-compilers">Supported Compilers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#supported-functionality">Supported Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#supported-gemm-data-types">Supported GEMM Data Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Quick Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-project">cuBLASDx In Your Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-cmake-project">cuBLASDx In Your CMake Project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#using-custom-cutlass">Using Custom CUTLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#defined-variables">Defined Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction1.html">General Matrix Multiply Using cuBLASDx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#defining-gemm-operation">Defining GEMM Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#executing-gemm">Executing GEMM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction1.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction1.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#launching-gemm-kernel">Launching GEMM Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction1.html#compilation">Compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Achieving High Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general-advice">General Advice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matrix-layouts">Matrix Layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#memory-management">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced">Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#further-reading">Further Reading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/operators.html">Operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#description-operators">Description Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#size-operator">Size Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#type-operator">Type Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#precision-operator">Precision Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#arrangement-operator">Arrangement Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#transposemode-operator">TransposeMode Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#leadingdimension-operator">LeadingDimension Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#alignment-operator">Alignment Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#function-operator">Function Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#sm-operator">SM Operator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#execution-operators">Execution Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-operator">Block Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-configuration-operators">Block Configuration Operators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/traits.html">Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#description-traits">Description Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#size-trait">Size Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#type-trait">Type Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#precision-trait">Precision Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#function-trait">Function Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#arrangement-trait">Arrangement Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#transpose-mode-trait">Transpose Mode Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#alignment-trait">Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-alignment-trait">Suggested Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#sm-trait">SM Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-trait">is_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-execution-trait">is_blas_execution Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-trait">is_complete_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-execution-trait">is_complete_blas_execution Trait</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#execution-traits">Execution Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#block-traits">Block Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#other-traits">Other Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-supported">is_supported</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-leading-dimension-of">suggested_leading_dimension_of</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/methods.html">Execution Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/methods.html#block-execute-method">Block Execute Method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#value-format">Value Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#input-output-data-format">Input/Output Data Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#shared-memory-usage">Shared Memory Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other_methods.html">Other Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#shared-memory-slicing">Shared Memory Slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#get-memory-layout">Get Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#suggested-shared-memory-layout">Suggested Shared Memory Layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other.html">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor">Tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#introduction-examples">Introduction Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#simple-gemm-examples">Simple GEMM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#nvrtc-examples">NVRTC Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#gemm-performance">GEMM Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id1">0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id2">0.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id4">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Software License Agreement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#third-party-license-agreements">Third Party License Agreements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="license.html#cutlass">CUTLASS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cuBLASDx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Achieving High Performance</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="achieving-high-performance">
+<span id="high-perf-label"></span><h1>Achieving High Performance<a class="headerlink" href="#achieving-high-performance" title="Permalink to this heading">¶</a></h1>
+<p>Below we present general advice and examples that may help in achieving high performance.</p>
+<div class="section" id="general-advice">
+<h2>General Advice<a class="headerlink" href="#general-advice" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Start with the library-provided default for the best compute performance.</p></li>
+<li><p>Best parameters for compute bound and memory bound kernels might not be identical.</p></li>
+<li><p>If possible ensure BLAS operations are batched so that enough CUDA blocks are run in a grid to fill the GPU for peak performance.</p></li>
+<li><p>Merge adjacent memory bound kernels (pre- and post-processing) with a BLAS kernel to save global memory trips.</p></li>
+<li><p>If possible use combination of <a class="reference internal" href="api/operators.html#precision-operator-label"><span class="std std-ref">precisions</span></a> that has <a class="reference internal" href="requirements_func.html#mixed-precision-label"><span class="std std-ref">MMA support</span></a>.</p></li>
+<li><p>Use tensor <a class="reference internal" href="api/methods.html#block-execute-method-label"><span class="std std-ref">execute(…)</span></a> API to get better IO and matrix multiplication performance.</p></li>
+<li><p>Use <a class="reference internal" href="api/other.html#copy-tensor-other-label"><span class="std std-ref">cublasdx::copy</span></a> for copying shared and global memory tensors. It should automatically vectorize loads and stores.</p></li>
+<li><p>Use 16-byte (128-bit) aligned pointers, and use <a class="reference internal" href="api/operators.html#alignment-operator-label"><span class="std std-ref">MaxAlignment</span></a> (alias for <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Alignment</span><span class="o">&lt;</span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span></code>).</p></li>
+</ul>
+</div>
+<div class="section" id="matrix-layouts">
+<h2>Matrix Layouts<a class="headerlink" href="#matrix-layouts" title="Permalink to this heading">¶</a></h2>
+<p>We recommend using tensor API along with <a class="reference internal" href="api/other_methods.html#get-layout-other-label"><span class="std std-ref">get_layout_smem_*()</span></a>,
+<a class="reference internal" href="api/other_methods.html#suggest-layout-other-label"><span class="std std-ref">suggest_layout_smem_*()</span></a>, and <a class="reference internal" href="api/other.html#create-tensor-other-label"><span class="std std-ref">cublasdx::make_tensor</span></a> functions.
+This allows using custom layouts for matrices which can provide better performance, and also better match your kernel.</p>
+<ul class="simple">
+<li><p>Try using <a class="reference internal" href="api/other_methods.html#suggest-layout-other-label"><span class="std std-ref">suggest_layout_smem_*()</span></a>, especially for <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> matrices, to get better GEMM and IO performance.</p></li>
+<li><p>Use <a class="reference internal" href="api/other_methods.html#get-layout-other-label"><span class="std std-ref">get_layout_smem_*()</span></a> for a matrix if you need it to be in plain column- or row-major ordering.</p></li>
+<li><p>The best layouts for GEMM may be different from the best layouts for the whole kernel; experiment and try various approaches.</p></li>
+<li><p>For use-cases which don’t have dedicated MMA (like fp32-fp32-fp32) try using <a class="reference internal" href="api/other_methods.html#get-layout-other-label"><span class="std std-ref">get_layout_smem_*()</span></a> and <a class="reference internal" href="api/traits.html#suggested-leading-dimension-of-trait-label"><span class="std std-ref">suggested_leading_dimension_of</span></a> to improve shared memory access patterns.</p></li>
+</ul>
+<div class="hint admonition">
+<p class="admonition-title">Example</p>
+<p>Example of using <a class="reference internal" href="api/operators.html#alignment-operator-label"><span class="std std-ref">maximum alignment</span></a>, <a class="reference internal" href="api/other.html#copy-tensor-other-label"><span class="std std-ref">cublasdx::copy</span></a>, and
+<a class="reference internal" href="api/other_methods.html#suggest-layout-other-label"><span class="std std-ref">suggested layouts</span></a> for shared memory to increase performance.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">BLAS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="n">__half</span><span class="p">,</span><span class="w"> </span><span class="n">__half</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">MaxAlignment</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">...);</span>
+
+<span class="c1">// Tensors with global memory data</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">a_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">get_layout_gmem_a</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">b_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">get_layout_gmem_b</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">c_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">get_layout_gmem_c</span><span class="p">());</span>
+
+<span class="c1">// Tensors with shared memory data</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">suggest_layout_smem_a</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">suggest_layout_smem_b</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_c</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">suggest_layout_smem_c</span><span class="p">());</span>
+
+<span class="c1">// 16-byte (128-bit) alignment helps vectorize (if possible) copying between shared and global memory</span>
+<span class="k">using</span><span class="w"> </span><span class="n">blas_alignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">alignment_of</span><span class="o">&lt;</span><span class="n">BLAS</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// 16, 16, 16</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">BLAS</span><span class="p">,</span><span class="w"> </span><span class="n">blas_alignment</span><span class="o">::</span><span class="n">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">);</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">BLAS</span><span class="p">,</span><span class="w"> </span><span class="n">blas_alignment</span><span class="o">::</span><span class="n">b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">);</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">BLAS</span><span class="p">,</span><span class="w"> </span><span class="n">blas_alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">);</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy_wait</span><span class="p">();</span>
+
+<span class="c1">// 16-byte (128-bit) alignment and suggested layouts help improve shared memory IO in GEMM</span>
+<span class="n">BLAS</span><span class="p">().</span><span class="n">execute</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">)</span>
+<span class="n">__syncthreads</span><span class="p">();</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">out_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">get_layout_gmem_c</span><span class="p">());</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">blas_alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">out_global_tensor</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="memory-management">
+<h2>Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Avoid reading/writing data from/to global memory unnecessarily.</p></li>
+<li><p>Ensure global memory reads/writes are coalesced.</p></li>
+<li><p>Use <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">shared</span></code> memory or extra registers to store temporary data.</p></li>
+<li><p>Offload any element-wise pre- and post-processing to transform functors that can be passed to <a class="reference internal" href="api/methods.html#block-execute-method-transform-label"><span class="std std-ref">execute(…)</span></a> to avoid trips to shared memory.</p></li>
+</ul>
+</div>
+<div class="section" id="advanced">
+<h2>Advanced<a class="headerlink" href="#advanced" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>If matrix-wide pre- and/or post-processing is required, try to partition data into registers to avoid shared memory trips.</p></li>
+<li><p>For BLAS loads not filling the GPU entirely, consider running parallel kernels in a separate stream.</p></li>
+<li><p>Use <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-occupancy-calculator/index.html">CUDA Occupancy Calculator</a> <a class="footnote-reference brackets" href="#id11" id="id12">6</a> and/or <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__OCCUPANCY.html">cudaOccupancyMaxActiveBlocksPerMultiprocessor</a> <a class="footnote-reference brackets" href="#id16" id="id17">8</a> function to
+determine the optimum launch parameters.</p></li>
+<li><p>Use the <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-occupancy-calculator/index.html">CUDA Occupancy Calculator</a> <a class="footnote-reference brackets" href="#id11" id="id13">6</a> or <a class="reference external" href="https://docs.nvidia.com/nsight-compute/NsightCompute/index.html#occupancy-calculator">Nsight Compute</a> <a class="footnote-reference brackets" href="#id14" id="id15">7</a> to determine what extra resources are available without losing occupancy.</p></li>
+</ul>
+</div>
+<div class="section" id="further-reading">
+<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html">CUDA Best Practices Guide</a> <a class="footnote-reference brackets" href="#id1" id="id2">1</a></p></li>
+<li><p><a class="reference external" href="https://docs.nvidia.com/cuda/volta-tuning-guide/index.html">Volta Tuning Guide</a> <a class="footnote-reference brackets" href="#id3" id="id4">2</a></p></li>
+<li><p><a class="reference external" href="https://docs.nvidia.com/cuda/turing-tuning-guide/index.html">Turing Tuning Guide</a> <a class="footnote-reference brackets" href="#id5" id="id6">3</a></p></li>
+<li><p><a class="reference external" href="https://docs.nvidia.com/cuda/ampere-tuning-guide/index.html">Ampere Tuning Guide</a> <a class="footnote-reference brackets" href="#id7" id="id8">4</a></p></li>
+<li><p><a class="reference external" href="https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html">Hopper Tuning Guide</a> <a class="footnote-reference brackets" href="#id9" id="id10">5</a></p></li>
+</ul>
+<div class="section" id="references">
+<h3>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h3>
+<dl class="footnote brackets">
+<dt class="label" id="id1"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html">https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html</a></p>
+</dd>
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/cuda/volta-tuning-guide/index.html">https://docs.nvidia.com/cuda/volta-tuning-guide/index.html</a></p>
+</dd>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id6">3</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/cuda/turing-tuning-guide/index.html">https://docs.nvidia.com/cuda/turing-tuning-guide/index.html</a></p>
+</dd>
+<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id8">4</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/cuda/ampere-tuning-guide/index.html">https://docs.nvidia.com/cuda/ampere-tuning-guide/index.html</a></p>
+</dd>
+<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="#id10">5</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html">https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html</a></p>
+</dd>
+<dt class="label" id="id11"><span class="brackets">6</span><span class="fn-backref">(<a href="#id12">1</a>,<a href="#id13">2</a>)</span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/cuda/cuda-occupancy-calculator/index.html">https://docs.nvidia.com/cuda/cuda-occupancy-calculator/index.html</a></p>
+</dd>
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id15">7</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/nsight-compute/NsightCompute/index.html#occupancy-calculator">https://docs.nvidia.com/nsight-compute/NsightCompute/index.html#occupancy-calculator</a></p>
+</dd>
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id17">8</a></span></dt>
+<dd><p><a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__OCCUPANCY.html">https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__OCCUPANCY.html</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction1.html" class="btn btn-neutral float-left" title="General Matrix Multiply Using cuBLASDx" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/index.html" class="btn btn-neutral float-right" title="API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+
+<p style="color: gray;">
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" style="color: inherit;">Privacy Policy</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/" target="_blank" style="color: inherit;">Manage My Privacy</a>
+|
+<a href="https://www.nvidia.com/en-us/preferences/start/" target="_blank" style="color: inherit;">Do Not Sell or Share My Data</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/" target="_blank" style="color: inherit;">Terms of Service</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/accessibility/" target="_blank" style="color: inherit;">Accessibility</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/company-policies/" target="_blank" style="color: inherit;">Corporate Policies</a>
+|
+<a href="https://www.nvidia.com/en-us/product-security/" target="_blank" style="color: inherit;">Product Security</a>
+|
+<a href="https://www.nvidia.com/en-us/contact/" target="_blank" style="color: inherit;">Contact</a>
+</p>
+
+<p>
+  Copyright &#169; 2022-2024, NVIDIA Corporation &amp; Affiliates. All rights reserved.
+</p>
+
+    <p></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+  a:link, a:visited {
+    color: #76b900;
+  }
+
+  a:hover {
+    color: #8c0;
+  }
+
+  .rst-content dl:not(.docutils) dt {
+    background: rgba(118, 185, 0, 0.1);
+    color: rgba(59,93,0,1);
+    border-top: solid 3px rgba(59,93,0,1);
+  }
+  </style>
+  
+
+</body>
+</html>

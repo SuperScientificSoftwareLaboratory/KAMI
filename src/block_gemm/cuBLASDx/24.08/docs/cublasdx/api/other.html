@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Other &mdash; cuBLASDx 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/cublasdx_override.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../examples.html" />
+    <link rel="prev" title="Other Methods" href="other_methods.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" > 
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            cuBLASDx
+          </a>
+              <div class="version">
+                0.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #76b900;
+    }
+
+    .wy-side-nav-search a:link, .wy-nav-top a:link {
+      color: #fff;
+    }
+    .wy-side-nav-search a:visited, .wy-nav-top a:visited {
+      color: #fff;
+    }
+    .wy-side-nav-search a:hover, .wy-nav-top a:hover {
+      color: #fff;
+    }
+
+    .wy-menu-vertical a:link, .wy-menu-vertical a:visited {
+      color: #d9d9d9
+    }
+
+    .wy-menu-vertical a:active {
+      background-color: #76b900
+    }
+
+    .wy-side-nav-search>div.version {
+      color: rgba(0, 0, 0, 0.3)
+    }
+
+    /* override table width restrictions */
+    .wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+    }
+
+    .wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+    }
+  </style>
+  
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Documentation home</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../requirements_func.html">Requirements and Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../requirements_func.html#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../requirements_func.html#supported-compilers">Supported Compilers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../requirements_func.html#supported-functionality">Supported Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../requirements_func.html#supported-gemm-data-types">Supported GEMM Data Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Quick Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#cublasdx-in-your-project">cuBLASDx In Your Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#cublasdx-in-your-cmake-project">cuBLASDx In Your CMake Project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#using-custom-cutlass">Using Custom CUTLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#defined-variables">Defined Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction1.html">General Matrix Multiply Using cuBLASDx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#defining-gemm-operation">Defining GEMM Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#executing-gemm">Executing GEMM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../introduction1.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction1.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#launching-gemm-kernel">Launching GEMM Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction1.html#compilation">Compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Achieving High Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#general-advice">General Advice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#matrix-layouts">Matrix Layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#memory-management">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#advanced">Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../performance.html#further-reading">Further Reading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../performance.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="operators.html">Operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="operators.html#description-operators">Description Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#size-operator">Size Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#type-operator">Type Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#precision-operator">Precision Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#arrangement-operator">Arrangement Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#transposemode-operator">TransposeMode Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#leadingdimension-operator">LeadingDimension Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#alignment-operator">Alignment Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#function-operator">Function Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#sm-operator">SM Operator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="operators.html#execution-operators">Execution Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#block-operator">Block Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="operators.html#block-configuration-operators">Block Configuration Operators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits.html">Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits.html#description-traits">Description Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#size-trait">Size Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#type-trait">Type Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#precision-trait">Precision Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#function-trait">Function Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#arrangement-trait">Arrangement Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#transpose-mode-trait">Transpose Mode Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#alignment-trait">Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#suggested-alignment-trait">Suggested Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#sm-trait">SM Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-blas-trait">is_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-blas-execution-trait">is_blas_execution Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-complete-blas-trait">is_complete_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-complete-blas-execution-trait">is_complete_blas_execution Trait</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="traits.html#execution-traits">Execution Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#block-traits">Block Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="traits.html#other-traits">Other Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#is-supported">is_supported</a></li>
+<li class="toctree-l4"><a class="reference internal" href="traits.html#suggested-leading-dimension-of">suggested_leading_dimension_of</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="methods.html">Execution Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="methods.html#block-execute-method">Block Execute Method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="methods.html#value-format">Value Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="methods.html#input-output-data-format">Input/Output Data Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="methods.html#shared-memory-usage">Shared Memory Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other_methods.html">Other Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other_methods.html#shared-memory-slicing">Shared Memory Slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other_methods.html#get-memory-layout">Get Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other_methods.html#suggested-shared-memory-layout">Suggested Shared Memory Layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tensor">Tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#introduction-examples">Introduction Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#simple-gemm-examples">Simple GEMM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#nvrtc-examples">NVRTC Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#gemm-performance">GEMM Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../release_notes.html#id1">0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../release_notes.html#id2">0.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../release_notes.html#id4">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">Software License Agreement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../license.html#third-party-license-agreements">Third Party License Agreements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../license.html#cutlass">CUTLASS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cuBLASDx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API reference</a></li>
+      <li class="breadcrumb-item active">Other</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="other">
+<h1>Other<a class="headerlink" href="#other" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="tensor">
+<span id="tensor-other-label"></span><h2>Tensor<a class="headerlink" href="#tensor" title="Permalink to this heading">¶</a></h2>
+<p>cuBLASDx exposes <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span></code> class which is an alias of a
+<a class="reference external" href="https://github.com/NVIDIA/cutlass/blob/main/media/docs/cute/03_tensor.md">cute::Tensor</a> class from CuTe
+library (see <a class="reference external" href="https://github.com/NVIDIA/cutlass">CUTLASS</a>).</p>
+</div>
+<div class="section" id="tensor-creation">
+<span id="create-tensor-other-label"></span><h2>Tensor Creation<a class="headerlink" href="#tensor-creation" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// #1: Wrapper of cute::make_tensor</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">Iterator</span><span class="p">,</span><span class="w"> </span><span class="k">class</span><span class="p">...</span><span class="w"> </span><span class="n">Args</span><span class="o">&gt;</span>
+<span class="n">__device__</span><span class="w"> </span><span class="n">__host__</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="w"> </span><span class="n">make_tensor</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Iterator</span><span class="o">&amp;</span><span class="w"> </span><span class="n">iter</span><span class="p">,</span><span class="w"> </span><span class="n">Args</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="p">...</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+
+<span class="c1">// #2: With pointer layout returned by the get_&lt;smem/gmem&gt;_layout_&lt;a/b/c&gt;, suggest_layout_smem_&lt;a/b/c&gt; method from the BLAS description.</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">PointerLayout</span><span class="o">&gt;</span>
+<span class="n">__device__</span><span class="w"> </span><span class="n">__host__</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="w"> </span><span class="n">make_tensor</span><span class="p">(</span><span class="n">T</span><span class="o">*</span><span class="w"> </span><span class="n">ptr</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">PointerLayout</span><span class="o">&amp;</span><span class="w"> </span><span class="n">pl</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span></code> is helper function for creating <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span></code> objects.</p>
+<p>There are two variants.
+The first one is simply a wrapper of <a class="reference external" href="https://github.com/NVIDIA/cutlass/blob/main/media/docs/cute/03_tensor.md#tensor-creation">cute::make_tensor(…)</a>,
+which usually requires manually tagging the raw pointer with its memory space.
+The other one works together with the <a class="reference internal" href="other_methods.html#get-layout-other-label"><span class="std std-ref">Get Memory Layout</span></a> and the <a class="reference internal" href="other_methods.html#suggest-layout-other-label"><span class="std std-ref">Suggested Shared Memory Layout</span></a> methods.
+It creates a global or shared memory tensor with the returned pointer layout.
+In contrast to the first variant, it will pick up the memory space information from the pointer layouts and tag the raw pointer correspondingly.</p>
+<div class="hint admonition">
+<p class="admonition-title">Example</p>
+</div>
+</div>
+<div class="section" id="copying-tensors">
+<span id="copy-tensor-other-label"></span><h2>Copying Tensors<a class="headerlink" href="#copying-tensors" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">NumThreads</span><span class="p">,</span><span class="w">       </span><span class="c1">// Number of threads performing copy operation</span>
+<span class="w">         </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">AlignmentInBytes</span><span class="p">,</span><span class="w"> </span><span class="c1">// Pointer alignment of src and dst tensor (minimum of them if they are different)</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">SrcEngine</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">SrcLayout</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">DstEngine</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">DstLayout</span><span class="o">&gt;</span>
+<span class="n">__forceinline__</span><span class="w"> </span><span class="n">__device__</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">copy</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w">                            </span><span class="n">tid</span><span class="p">,</span><span class="w"> </span><span class="c1">// Thread index in CUDA block</span>
+<span class="w">          </span><span class="k">const</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="o">&lt;</span><span class="n">SrcEngine</span><span class="p">,</span><span class="w"> </span><span class="n">SrcLayout</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">src</span><span class="p">,</span>
+<span class="w">          </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="o">&lt;</span><span class="n">DstEngine</span><span class="p">,</span><span class="w"> </span><span class="n">DstLayout</span><span class="o">&gt;&amp;</span><span class="w">       </span><span class="n">dst</span><span class="p">)</span>
+
+<span class="c1">// Assumes pointers in both dst and src tensors are not extra aligned</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">NumThreads</span><span class="p">,</span><span class="w"> </span><span class="c1">// Number of threads performing copy operation</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">SrcEngine</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">SrcLayout</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">DstEngine</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">DstLayout</span><span class="o">&gt;</span>
+<span class="n">__forceinline__</span><span class="w"> </span><span class="n">__device__</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">copy</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w">                            </span><span class="n">tid</span><span class="p">,</span><span class="w"> </span><span class="c1">// Thread index in CUDA block</span>
+<span class="w">          </span><span class="k">const</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="o">&lt;</span><span class="n">SrcEngine</span><span class="p">,</span><span class="w"> </span><span class="n">SrcLayout</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">src</span><span class="p">,</span>
+<span class="w">          </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="o">&lt;</span><span class="n">DstEngine</span><span class="p">,</span><span class="w"> </span><span class="n">DstLayout</span><span class="o">&gt;&amp;</span><span class="w">       </span><span class="n">dst</span><span class="p">)</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">BLAS</span><span class="p">,</span><span class="w">                </span><span class="c1">// BLAS description which provides the number of threads</span>
+<span class="w">         </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">AlignmentInBytes</span><span class="p">,</span><span class="w"> </span><span class="c1">// Pointer alignment of src and dst tensor (minimum of them if they are different)</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">SrcEngine</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">SrcLayout</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">DstEngine</span><span class="p">,</span>
+<span class="w">         </span><span class="k">class</span><span class="w"> </span><span class="nc">DstLayout</span><span class="o">&gt;</span>
+<span class="n">__forceinline__</span><span class="w"> </span><span class="n">__device__</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">copy</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="o">&lt;</span><span class="n">SrcEngine</span><span class="p">,</span><span class="w"> </span><span class="n">SrcLayout</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">src</span><span class="p">,</span>
+<span class="w">          </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="o">&lt;</span><span class="n">DstEngine</span><span class="p">,</span><span class="w"> </span><span class="n">DstLayout</span><span class="o">&gt;&amp;</span><span class="w">       </span><span class="n">dst</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span></code> is helper function for copying data between tensors that are either in shared or global memory.</p>
+<p>The copy is done cooperatively. All threads, indicated either by <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">NumThreads</span></code> or by <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BLAS</span><span class="o">::</span><span class="n">block_dim</span></code>, will participate in the copy.
+The function takes into account of the given alignments and attempt to vectorize the load and the store instructions when possible.</p>
+<p>Requirements:</p>
+<ul class="simple">
+<li><p>Data in tensors has to be in shared or global memory. Copying from or to registers is not supported.</p></li>
+<li><p>Both <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">src</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dst</span></code> tensors must represent tensors of the same underlying element types (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span><span class="o">&lt;</span><span class="n">Engine</span><span class="p">,</span><span class="w"> </span><span class="n">Layout</span><span class="o">&gt;::</span><span class="n">value_type</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Engine</span><span class="o">::</span><span class="n">value_type</span></code>).</p></li>
+<li><p>Both <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">src</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dst</span></code> tensors must have the same size, i.e. the number of elements.</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">AlignmentInBytes</span></code> must be a multiple of the alignment of the underlying element type of tensors.</p></li>
+<li><p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">AlignmentInBytes</span></code> must be equal to 1, 2, 4, 8 or 16, or equal to the alignment of the underlying element type of tensors.</p></li>
+<li><p>Underlying pointers in <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">src</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dst</span></code> tensors must be aligned to <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">AlignmentInBytes</span></code> bytes.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Synchronization step required after cublasdx::copy and before the use of dst tensor</span>
+<span class="n">__forceinline__</span><span class="w"> </span><span class="n">__device__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">copy_wait</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy_wait</span></code> creates synchronization point. It has to be called after <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span></code> operation, before any consequent
+read or write to <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dst</span></code> tensor, and before any consequent write to <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">src</span></code> tensor. Otherwise, the result of copying operation is
+undefined. It’s important to note that it’s always not 1-to-1 equivalent of <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">__syncthreads</span><span class="p">()</span></code> as it also handles asynchronous data copying
+(see <a class="reference external" href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-cp-async">cp.async family of instructions</a>)</p>
+<div class="hint admonition">
+<p class="admonition-title">Example</p>
+<p>Example of copying A matrix from global to shared memory and back.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">BLAS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">...);</span>
+<span class="k">extern</span><span class="w"> </span><span class="n">__shared__</span><span class="w"> </span><span class="nf">__align__</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">smem</span><span class="p">[];</span>
+
+<span class="c1">// Slice shared memory</span>
+<span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">smem_c</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">slice_shared_memory</span><span class="p">(</span><span class="n">smem</span><span class="p">);</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="n">gmem_tensor_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">a_gmem_pointer</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">get_layout_gmem_a</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">smem_tensor_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">BLAS</span><span class="o">::</span><span class="n">suggest_layout_smem_a</span><span class="p">());</span>
+
+<span class="c1">// Copy from global to shared</span>
+<span class="k">using</span><span class="w"> </span><span class="n">alignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">alignment_of</span><span class="o">&lt;</span><span class="n">BLAS</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">gmem_tensor_a</span><span class="p">,</span><span class="w"> </span><span class="n">smem_tensor_a</span><span class="p">);</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy_wait</span><span class="p">();</span>
+
+<span class="c1">// Copy from shared to global</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">smem_tensor_a</span><span class="p">,</span><span class="w"> </span><span class="n">gmem_tensor_a</span><span class="p">);</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy_wait</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="other_methods.html" class="btn btn-neutral float-left" title="Other Methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+
+<p style="color: gray;">
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" style="color: inherit;">Privacy Policy</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/" target="_blank" style="color: inherit;">Manage My Privacy</a>
+|
+<a href="https://www.nvidia.com/en-us/preferences/start/" target="_blank" style="color: inherit;">Do Not Sell or Share My Data</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/" target="_blank" style="color: inherit;">Terms of Service</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/accessibility/" target="_blank" style="color: inherit;">Accessibility</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/company-policies/" target="_blank" style="color: inherit;">Corporate Policies</a>
+|
+<a href="https://www.nvidia.com/en-us/product-security/" target="_blank" style="color: inherit;">Product Security</a>
+|
+<a href="https://www.nvidia.com/en-us/contact/" target="_blank" style="color: inherit;">Contact</a>
+</p>
+
+<p>
+  Copyright &#169; 2022-2024, NVIDIA Corporation &amp; Affiliates. All rights reserved.
+</p>
+
+    <p></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+  a:link, a:visited {
+    color: #76b900;
+  }
+
+  a:hover {
+    color: #8c0;
+  }
+
+  .rst-content dl:not(.docutils) dt {
+    background: rgba(118, 185, 0, 0.1);
+    color: rgba(59,93,0,1);
+    border-top: solid 3px rgba(59,93,0,1);
+  }
+  </style>
+  
+
+</body>
+</html>

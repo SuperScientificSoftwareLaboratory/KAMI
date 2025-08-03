@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Matrix Multiply Using cuBLASDx &mdash; cuBLASDx 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/cublasdx_override.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Achieving High Performance" href="performance.html" />
+    <link rel="prev" title="Quick Installation Guide" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" > 
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cuBLASDx
+          </a>
+              <div class="version">
+                0.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #76b900;
+    }
+
+    .wy-side-nav-search a:link, .wy-nav-top a:link {
+      color: #fff;
+    }
+    .wy-side-nav-search a:visited, .wy-nav-top a:visited {
+      color: #fff;
+    }
+    .wy-side-nav-search a:hover, .wy-nav-top a:hover {
+      color: #fff;
+    }
+
+    .wy-menu-vertical a:link, .wy-menu-vertical a:visited {
+      color: #d9d9d9
+    }
+
+    .wy-menu-vertical a:active {
+      background-color: #76b900
+    }
+
+    .wy-side-nav-search>div.version {
+      color: rgba(0, 0, 0, 0.3)
+    }
+
+    /* override table width restrictions */
+    .wy-table-responsive table td, .wy-table-responsive table th {
+        white-space: normal;
+    }
+
+    .wy-table-responsive {
+        margin-bottom: 24px;
+        max-width: 100%;
+        overflow: visible;
+    }
+  </style>
+  
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Documentation home</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="requirements_func.html">Requirements and Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requirements_func.html#supported-compilers">Supported Compilers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#supported-functionality">Supported Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements_func.html#supported-gemm-data-types">Supported GEMM Data Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Quick Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-project">cuBLASDx In Your Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#cublasdx-in-your-cmake-project">cuBLASDx In Your CMake Project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#using-custom-cutlass">Using Custom CUTLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#defined-variables">Defined Variables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">General Matrix Multiply Using cuBLASDx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#defining-gemm-operation">Defining GEMM Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-gemm">Executing GEMM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#launching-gemm-kernel">Launching GEMM Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compilation">Compilation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Achieving High Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#general-advice">General Advice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#matrix-layouts">Matrix Layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#memory-management">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#advanced">Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html#further-reading">Further Reading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="performance.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/operators.html">Operators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#description-operators">Description Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#size-operator">Size Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#type-operator">Type Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#precision-operator">Precision Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#arrangement-operator">Arrangement Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#transposemode-operator">TransposeMode Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#leadingdimension-operator">LeadingDimension Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#alignment-operator">Alignment Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#function-operator">Function Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#sm-operator">SM Operator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/operators.html#execution-operators">Execution Operators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-operator">Block Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/operators.html#block-configuration-operators">Block Configuration Operators</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/traits.html">Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#description-traits">Description Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#size-trait">Size Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#type-trait">Type Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#precision-trait">Precision Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#function-trait">Function Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#arrangement-trait">Arrangement Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#transpose-mode-trait">Transpose Mode Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#alignment-trait">Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-alignment-trait">Suggested Alignment Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#sm-trait">SM Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-trait">is_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-blas-execution-trait">is_blas_execution Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-trait">is_complete_blas Trait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-complete-blas-execution-trait">is_complete_blas_execution Trait</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#execution-traits">Execution Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#block-traits">Block Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/traits.html#other-traits">Other Traits</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#is-supported">is_supported</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/traits.html#suggested-leading-dimension-of">suggested_leading_dimension_of</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/methods.html">Execution Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/methods.html#block-execute-method">Block Execute Method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#value-format">Value Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#input-output-data-format">Input/Output Data Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/methods.html#shared-memory-usage">Shared Memory Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other_methods.html">Other Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#shared-memory-slicing">Shared Memory Slicing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#get-memory-layout">Get Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other_methods.html#suggested-shared-memory-layout">Suggested Shared Memory Layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/other.html">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor">Tensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#tensor-creation">Tensor Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/other.html#copying-tensors">Copying Tensors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#introduction-examples">Introduction Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#simple-gemm-examples">Simple GEMM Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#nvrtc-examples">NVRTC Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#gemm-performance">GEMM Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id1">0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="release_notes.html#id2">0.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release_notes.html#id4">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Software License Agreement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#third-party-license-agreements">Third Party License Agreements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="license.html#cutlass">CUTLASS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cuBLASDx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">General Matrix Multiply Using cuBLASDx</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="general-matrix-multiply-using-cublasdx">
+<span id="intro1-label"></span><h1>General Matrix Multiply Using cuBLASDx<a class="headerlink" href="#general-matrix-multiply-using-cublasdx" title="Permalink to this heading">¶</a></h1>
+<p>In this introduction, we will perform a general matrix multiplication <span class="math notranslate nohighlight">\(\mathbf{C}_{m\times n} = {\alpha} \times \mathbf{A}_{m\times k} \times \mathbf{B}_{k\times n} + {\beta} \times \mathbf{C}_{m\times n}\)</span> using the cuBLASDx
+library. This section is based on the <a class="reference internal" href="examples.html#examples-introduction-examples-label"><span class="std std-ref">introduction_example.cu</span></a> example shipped with cuBLASDx.
+See <a class="reference internal" href="examples.html#examples-label"><span class="std std-ref">Examples</span></a> section to check other cuBLASDx samples.</p>
+<div class="section" id="defining-gemm-operation">
+<h2>Defining GEMM Operation<a class="headerlink" href="#defining-gemm-operation" title="Permalink to this heading">¶</a></h2>
+<p>The first step is defining the GEMM we want to perform.
+It is done by adding together cuBLASDx operators to create a GEMM description.
+The correctness of this type is evaluated at compile time every time new operator is added.
+A well-defined cuBLASDx GEMM routine description must include two parts:</p>
+<ol class="arabic simple">
+<li><p>Selected linear algebra routine. In this case that is matrix multiplication: <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span></code>.</p></li>
+<li><p>Valid and sufficient description of the inputs and outputs: the dimensions of matrices (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">m</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">n</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">k</span></code>), the precision (half, float, double etc.), the data type (real or complex) and the data arrangement of matrices (row- or column-major).</p></li>
+</ol>
+<p>To get a descriptor for <span class="math notranslate nohighlight">\(\mathbf{C}_{m\times n} = {\alpha} \times \mathbf{A}_{m\times k} \times \mathbf{B}_{k\times n} + {\beta} \times \mathbf{C}_{m\times n}\)</span> with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span></code>, we just need
+to write the following lines:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="w"> </span><span class="cm">/* m */</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="cm">/* n */</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="cm">/* k */</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="w"> </span><span class="cm">/* A */</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="w"> </span><span class="cm">/* B */</span><span class="o">&gt;</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>In order to encode the operation properties, cuBLASDx provides operators
+<a class="reference internal" href="api/operators.html#size-operator-label"><span class="std std-ref">Size</span></a>,
+<a class="reference internal" href="api/operators.html#precision-operator-label"><span class="std std-ref">Precision</span></a>,
+<a class="reference internal" href="api/operators.html#type-operator-label"><span class="std std-ref">Type</span></a>,
+<a class="reference internal" href="api/operators.html#function-operator-label"><span class="std std-ref">Function</span></a>, and
+<a class="reference internal" href="api/operators.html#arrangement-operator-label"><span class="std std-ref">Arrangement</span></a>,
+which can be combined by using the standard addition operator (<code class="code highlight cpp docutils literal highlight-cpp"><span class="o">+</span></code>).</p>
+<p>Optionally, user can set alignments and leading dimensions for each matrix using <a class="reference internal" href="api/operators.html#alignment-operator-label"><span class="std std-ref">Alignment</span></a> and
+<a class="reference internal" href="api/operators.html#leadingdimension-operator-label"><span class="std std-ref">LeadingDimension</span></a>, respectively.
+For leading dimensions, it is also possible to set them dynamically during the execution, however, it is worth noting it may have an effect on the performance.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>cuBLASDx also supports matrices that can not simply be expressed by row- or column-major and leading dimensions.
+See <a class="reference internal" href="examples.html#examples-simple-examples-label"><span class="std std-ref">simple_gemm_custom_layout.cu</span></a> example.</p>
+</div>
+<p>To obtain a fully usable operation that executes GEMM on CUDA block level, we need to provide at least two additional pieces of
+information:</p>
+<ul class="simple">
+<li><p>The first one is the <a class="reference internal" href="api/operators.html#sm-operator-label"><span class="std std-ref">SM Operator</span></a> which indicates the targeted CUDA architecture on which we want to run the GEMM. Each GPU architecture is different, therefore each can use a different implementation and may require different CUDA block size for the best performance. In the <a class="reference internal" href="examples.html#examples-introduction-examples-label"><span class="std std-ref">introduction_example.cu</span></a> example this is passed as template parameter, but in here we can assume we’re targeting Volta GPUs (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span></code>).</p></li>
+<li><p>Finally, we use the <a class="reference internal" href="api/operators.html#block-operator-label"><span class="std std-ref">Block Operator</span></a> to show that the BLAS routine will be performed by multiple threads in a single CUDA block. At this point, cuBLASDx performs additional verifications to make sure provided description is valid and that it is possible to execute it on the requested architecture.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>User can also specify the layout and the number of threads that will be performing the GEMM.
+This is done with the <a class="reference internal" href="api/operators.html#blockdim-operator-label"><span class="std std-ref">BlockDim Operator</span></a>.
+Adding <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">Z</span><span class="o">&gt;</span></code> means that the GEMM will only work correctly if a kernel is launched with block dimensions <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">dim3</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span><span class="w"> </span><span class="n">Y1</span><span class="p">,</span><span class="w"> </span><span class="n">Z1</span><span class="p">)</span></code> where
+<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">X1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">X</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Y1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Y</span></code>, and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">Z1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Z</span></code>.
+Detailed requirements can be found in the section dedicated to <a class="reference internal" href="api/operators.html#blockdim-operator-label"><span class="std std-ref">BlockDim</span></a> operator.
+If <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span></code> operator is not used, cuBLASDx will select preferred block size that can be obtained with <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span><span class="o">::</span><span class="n">block_dim</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If there is no need to set custom block dimensions, it is recommended not to use <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">BlockDim</span></code> operator and rely on <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span><span class="o">::</span><span class="n">block_dim</span></code>.
+For more details, see <a class="reference internal" href="api/methods.html#block-execute-method-label"><span class="std std-ref">Block Execute Method</span></a> section, <a class="reference internal" href="api/operators.html#blockdim-operator-label"><span class="std std-ref">BlockDim Operator</span></a>, and
+<a class="reference internal" href="api/traits.html#suggestedblockdim-block-trait-label"><span class="std std-ref">Suggested Block Dim Trait</span></a>.</p>
+</div>
+<p>For this sample, let’s assume we want to use a 1D CUDA thread block with 256 threads.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">256</span><span class="o">&gt;</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="executing-gemm">
+<h2>Executing GEMM<a class="headerlink" href="#executing-gemm" title="Permalink to this heading">¶</a></h2>
+<p>Class <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code> which describes the matrix multiplication can be instantiated into object (or objects).
+Forming the object has no computational cost, and should be seen as a handle.
+The function descriptor object provides a compute method, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">execute</span><span class="p">(...)</span></code> that performs the requested function.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">());</span>
+
+<span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">gemm_kernel</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Execute GEMM</span>
+<span class="w">      </span><span class="n">GEMM</span><span class="p">().</span><span class="n">execute</span><span class="p">(</span><span class="cm">/* What are the arguments? */</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is assumed that all the matrices reside in the shared memory.
+It is up to the users to load the matrices from global to shared memory before calling the execution method.
+In the same way, users are responsible for saving the results.</p>
+<p>Starting from cuBLASDx 0.2.0, the execute method takes tensors (<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span></code>) as inputs and outputs.
+<code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">tensor</span></code> is an alias of a <a class="reference external" href="https://github.com/NVIDIA/cutlass/blob/main/media/docs/cute/03_tensor.md">CuTe tensor (cute::Tensor)</a>,
+which is a representation of a multidimensional array that hold</p>
+<ul class="simple">
+<li><p>data in any kind of memory, including global memory, shared memory and register memory, and</p></li>
+<li><p>a <a class="reference external" href="https://github.com/NVIDIA/cutlass/blob/main/media/docs/cute/01_layout.md">CuTe layout (cute::Layout)</a> describing how elements are organized.</p></li>
+</ul>
+<p>A typical structure of a <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code> kernel is as follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="p">;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">());</span>
+
+<span class="c1">// Type &lt;a/b/c&gt;_value_type is defined based on the GEMM description. Precision operator defines its numerical</span>
+<span class="c1">// precision, and via Type operator user specifies if it is complex or real.</span>
+<span class="c1">//</span>
+<span class="c1">// In this case, a/b/c_value_type are all double since set precision is double, and type is real.</span>
+<span class="k">using</span><span class="w"> </span><span class="n">a_value_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">GEMM</span><span class="o">::</span><span class="n">a_value_type</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="n">b_value_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">GEMM</span><span class="o">::</span><span class="n">b_value_type</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="n">c_value_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">GEMM</span><span class="o">::</span><span class="n">c_value_type</span><span class="p">;</span>
+
+<span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">gemm_kernel</span><span class="p">(</span><span class="n">c_value_type</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c_value_type</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">extern</span><span class="w"> </span><span class="n">__shared__</span><span class="w"> </span><span class="nf">__align__</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">smem</span><span class="p">[];</span>
+
+<span class="w">      </span><span class="c1">// Create global memory tensor</span>
+<span class="w">      </span><span class="c1">// a_global_tensor = (from a)</span>
+<span class="w">      </span><span class="c1">// b_global_tensor = (from b)</span>
+<span class="w">      </span><span class="c1">// c_global_tensor = (from c)</span>
+
+<span class="w">      </span><span class="c1">// Make shared memory tensor</span>
+<span class="w">      </span><span class="c1">// a_shared_tensor = (from smem)</span>
+<span class="w">      </span><span class="c1">// b_shared_tensor = (from smem + ...)</span>
+<span class="w">      </span><span class="c1">// c_shared_tensor = (from smem + ...)</span>
+
+<span class="w">      </span><span class="c1">// Load data from global memory tensor to shared memory tensor</span>
+<span class="w">      </span><span class="c1">// a_shared_tensor &lt;-- a_global_tensor</span>
+<span class="w">      </span><span class="c1">// b_shared_tensor &lt;-- b_global_tensor</span>
+<span class="w">      </span><span class="c1">// c_shared_tensor &lt;-- c_global_tensor</span>
+
+<span class="w">      </span><span class="c1">// Execute GEMM</span>
+<span class="w">      </span><span class="n">GEMM</span><span class="p">().</span><span class="n">execute</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">__syncthreads</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// Store data from shared memory tensor to global memory tensor</span>
+<span class="w">      </span><span class="c1">// c_global_tensor &lt;-- c_shared_tensor</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>As hinted by the comments, there are 4 steps.</p>
+<ol class="arabic simple">
+<li><p>Create global and shared memory tensors (see <a class="reference internal" href="#intro-create-tensors-label"><span class="std std-ref">Tensor Creation</span></a>).</p></li>
+<li><p>Copy data from global memory tensors to shared memory tensors (see <a class="reference internal" href="#intro-copy-between-tensors-label"><span class="std std-ref">Copying Tensors</span></a>).</p></li>
+<li><p>(main step) Execute <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code> using the tensor APIs.</p></li>
+<li><p>Copy data from shared memory tensors to global memory tensors (see <a class="reference internal" href="#intro-copy-between-tensors-label"><span class="std std-ref">Copying Tensors</span></a>).</p></li>
+</ol>
+<div class="section" id="tensor-creation">
+<span id="intro-create-tensors-label"></span><h3>Tensor Creation<a class="headerlink" href="#tensor-creation" title="Permalink to this heading">¶</a></h3>
+<p>To create tensors with global and shared memory, cuBLASDx provides a helper function <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(...)</span></code>,
+which works together with the layouts returned by the method <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">get_layout_</span><span class="o">&lt;</span><span class="n">gmem</span><span class="o">/</span><span class="n">smem</span><span class="o">&gt;</span><span class="n">_</span><span class="o">&lt;</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(...)</span></code> from the defined <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code> object.
+Both layouts take into account of the arrangements and shared memory layouts utilize leading dimensions information from the <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code>
+type. For global memory layouts information regarding leading dimensions must be passed through an extra argument and otherwise it
+will be inferred from the given problem size.</p>
+<p>For creating shared memory tensors, we need pointers that point to shared memory slices for <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> matrices.
+The <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">slice_shared_memory</span><span class="p">(...)</span></code> method provides the functionality.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">GEMM</span><span class="o">&gt;</span>
+<span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">gemm_kernel</span><span class="p">(</span><span class="n">GEMM</span><span class="o">::</span><span class="n">c_value_type</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">a_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">b_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">c_value_type</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">c_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">extern</span><span class="w"> </span><span class="n">__shared__</span><span class="w"> </span><span class="nf">__align__</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">smem</span><span class="p">[];</span>
+
+<span class="w">      </span><span class="c1">// Make global memory tensor</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">a_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_a</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">b_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_b</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">c_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_c</span><span class="p">());</span>
+
+<span class="w">      </span><span class="c1">// Make shared memory tensor</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">smem_c</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">slice_shared_memory</span><span class="p">(</span><span class="n">smem</span><span class="p">);</span><span class="w"> </span><span class="c1">// smem_&lt;a/b/c&gt; are aligned to cublasdx::alignment_of&lt;GEMM&gt;::&lt;a/b/c&gt;</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_a</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_b</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_c</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_c</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If there is no need to use plain row- or column-major layouts for shared memory, it is recommended to use layouts returned by <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span><span class="o">::</span><span class="n">suggest_layout_smem_</span><span class="o">&lt;</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(...)</span></code>
+as in many cases it will lead to better performance. See <a class="reference internal" href="api/other_methods.html#suggest-layout-other-label"><span class="std std-ref">Suggested Shared Memory Layout</span></a>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">smem_c</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">slice_shared_memory</span><span class="p">(</span><span class="n">smem</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">suggest_layout_smem_a</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">suggest_layout_smem_b</span><span class="p">());</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_c</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">suggest_layout_smem_c</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<p>For more details of the mentioned helper function and methods, see <a class="reference internal" href="api/other.html#create-tensor-other-label"><span class="std std-ref">Tensor Creation</span></a>, <a class="reference internal" href="api/other_methods.html#suggest-layout-other-label"><span class="std std-ref">Suggested Shared Memory Layout</span></a> and <a class="reference internal" href="api/other_methods.html#slice-shared-memory-other-label"><span class="std std-ref">Shared Memory Slicing</span></a>.</p>
+</div>
+<div class="section" id="copying-tensors">
+<span id="intro-copy-between-tensors-label"></span><h3>Copying Tensors<a class="headerlink" href="#copying-tensors" title="Permalink to this heading">¶</a></h3>
+<p>cuBLASDx offers a helper function, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="p">(...)</span></code>, that copies data between tensor objects.
+All threads from the <a class="reference internal" href="api/operators.html#blockdim-operator-label"><span class="std std-ref">BlockDim Operator</span></a> will participate in the copy.
+The function takes into account of the given alignments and attempts to vectorize the load and store when possible.
+It is recommended to use it for achieving better kernel performance. See <a class="reference internal" href="api/other.html#copy-tensor-other-label"><span class="std std-ref">Copying Tensors</span></a> for more details.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Load data from global memory tensor to shared memory tensor</span>
+<span class="k">using</span><span class="w"> </span><span class="n">alignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">alignment_of</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">);</span><span class="w"> </span><span class="c1">// &lt;a/b/c&gt;_shared_tensor, created from smem_&lt;a/b/c&gt;, is aligned to alignment::&lt;a/b/c&gt;</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">);</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">);</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy_wait</span><span class="p">();</span>
+
+<span class="c1">// Store data to global memory</span>
+<span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">c_global_tensor</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="launching-gemm-kernel">
+<h2>Launching GEMM Kernel<a class="headerlink" href="#launching-gemm-kernel" title="Permalink to this heading">¶</a></h2>
+<p>To launch a kernel executing the defined <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span></code> we need to know the required block dimensions and the amount of shared memory needed for all
+three matrices - <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code>, <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code>. Elements in the matrix <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">A</span></code> should be in a row-major format, and matrices <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">B</span></code> and <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">C</span></code> in a column-major format, accounting for leading dimensions.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">GEMM</span><span class="o">&gt;</span>
+<span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">gemm_kernel</span><span class="p">(</span><span class="n">GEMM</span><span class="o">::</span><span class="n">c_value_type</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">a_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">b_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">c_value_type</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">c_value_type</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">extern</span><span class="w"> </span><span class="n">__shared__</span><span class="w"> </span><span class="nf">__align__</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">smem</span><span class="p">[];</span>
+
+<span class="w">      </span><span class="c1">// Make global memory tensor</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">a_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_a</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">b_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_b</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">c_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_c</span><span class="p">());</span>
+
+<span class="w">      </span><span class="c1">// Make shared memory tensor</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">smem_c</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">slice_shared_memory</span><span class="p">(</span><span class="n">smem</span><span class="p">);</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_a</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_b</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_c</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_c</span><span class="p">());</span>
+
+<span class="w">      </span><span class="c1">// Load data from global memory tensor to shared memory tensor</span>
+<span class="w">      </span><span class="k">using</span><span class="w"> </span><span class="n">alignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">alignment_of</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy_wait</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// Execute GEMM</span>
+<span class="w">      </span><span class="n">GEMM</span><span class="p">().</span><span class="n">execute</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">__syncthreads</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// Store data to global memory</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">c_global_tensor</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// CUDA_CHECK_AND_EXIT - marco checks if function returns cudaSuccess; if not it prints the error code and exits the program</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">introduction_example</span><span class="p">(</span><span class="n">value_type</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">value_type</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">value_type</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">value_type</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">value_type</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                      </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                      </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                      </span><span class="o">+</span><span class="w"> </span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                      </span><span class="o">+</span><span class="w"> </span><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">                      </span><span class="o">+</span><span class="w"> </span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                      </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">());</span>
+
+<span class="w">  </span><span class="c1">// Invokes kernel with GEMM::block_dim threads in CUDA block</span>
+<span class="w">  </span><span class="n">gemm_kernel</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="o">&gt;&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">block_dim</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">shared_memory_size</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">  </span><span class="n">CUDA_CHECK_AND_EXIT</span><span class="p">(</span><span class="n">cudaPeekAtLastError</span><span class="p">());</span>
+<span class="w">  </span><span class="n">CUDA_CHECK_AND_EXIT</span><span class="p">(</span><span class="n">cudaDeviceSynchronize</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The required shared memory can be obtained using <code class="code highlight cpp docutils literal highlight-cpp"><span class="n">GEMM</span><span class="o">::</span><span class="n">shared_memory_size</span></code>. It accounts for any padding declared using <a class="reference internal" href="api/operators.html#leadingdimension-operator-label"><span class="std std-ref">LeadingDimension Operator</span></a>.</p>
+<p>For simplicity, in the example we allocate managed memory for device matrices, assume that Volta architecture is used, and don’t check CUDA error codes returned by CUDA API functions.
+Please check the full <a class="reference internal" href="examples.html#examples-introduction-examples-label"><span class="std std-ref">introduction_example.cu</span></a> example, as well as others shipped with cuBLASDx, for more detailed code.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cublasdx.hpp&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cublasdx</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">GEMM</span><span class="o">&gt;</span>
+<span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">gemm_kernel</span><span class="p">(</span><span class="n">GEMM</span><span class="o">::</span><span class="n">value_type</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">value_type</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">value_type</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">value_type</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">value_type</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">extern</span><span class="w"> </span><span class="n">__shared__</span><span class="w"> </span><span class="nf">__align__</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">smem</span><span class="p">[];</span>
+
+<span class="w">      </span><span class="c1">// Make global memory tensor</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">a_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_a</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">b_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_b</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">c_global_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_gmem_c</span><span class="p">());</span>
+
+<span class="w">      </span><span class="c1">// Make shared memory tensor</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">smem_c</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">slice_shared_memory</span><span class="p">(</span><span class="n">smem</span><span class="p">);</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_a</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_a</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_b</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_b</span><span class="p">());</span>
+<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">make_tensor</span><span class="p">(</span><span class="n">smem_c</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">get_layout_smem_c</span><span class="p">());</span>
+
+<span class="w">      </span><span class="c1">// Load data from global memory tensor to shared memory tensor</span>
+<span class="w">      </span><span class="k">using</span><span class="w"> </span><span class="n">alignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">alignment_of</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">b</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_global_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy_wait</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// Execute GEMM</span>
+<span class="w">      </span><span class="n">GEMM</span><span class="p">().</span><span class="n">execute</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">b_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c_shared_tensor</span><span class="p">);</span>
+<span class="w">      </span><span class="n">__syncthreads</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// Store data to global memory</span>
+<span class="w">      </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">copy</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="p">,</span><span class="w"> </span><span class="n">alignment</span><span class="o">::</span><span class="n">c</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c_shared_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">c_global_tensor</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">introduction_example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">GEMM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="n">Size</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="n">Precision</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="n">Type</span><span class="o">&lt;</span><span class="n">type</span><span class="o">::</span><span class="n">real</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="n">Arrangement</span><span class="o">&lt;</span><span class="n">cublasdx</span><span class="o">::</span><span class="n">row_major</span><span class="p">,</span><span class="w"> </span><span class="n">cublasdx</span><span class="o">::</span><span class="n">col_major</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="n">Function</span><span class="o">&lt;</span><span class="n">function</span><span class="o">::</span><span class="n">MM</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="n">SM</span><span class="o">&lt;</span><span class="mi">700</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="n">Block</span><span class="p">()</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="n">BlockDim</span><span class="o">&lt;</span><span class="mi">256</span><span class="o">&gt;</span><span class="p">());</span>
+
+<span class="w">  </span><span class="c1">// Allocate managed memory for A, B, C matrices in one go</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">value_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">example</span><span class="o">::</span><span class="n">uniform_value_type_t</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// in the example A, B, C are of the same value_type</span>
+<span class="w">  </span><span class="n">value_type</span><span class="o">*</span><span class="w"> </span><span class="n">abc</span><span class="p">;</span>
+<span class="w">  </span><span class="k">auto</span><span class="w">        </span><span class="n">size</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">a_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">b_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">c_size</span><span class="p">;</span>
+<span class="w">  </span><span class="k">auto</span><span class="w">        </span><span class="n">size_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">value_type</span><span class="p">);</span>
+<span class="w">  </span><span class="n">cudaMallocManaged</span><span class="p">(</span><span class="o">&amp;</span><span class="n">abc</span><span class="p">,</span><span class="w"> </span><span class="n">size_bytes</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Generate data</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">abc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">a_value_type</span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">abc</span><span class="p">;</span>
+<span class="w">  </span><span class="n">b_value_type</span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">abc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">a_size</span><span class="p">;</span>
+<span class="w">  </span><span class="n">c_value_type</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">abc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">a_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">b_size</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// Invokes kernel with GEMM::block_dim threads in CUDA block</span>
+<span class="w">  </span><span class="n">gemm_kernel</span><span class="o">&lt;</span><span class="n">GEMM</span><span class="o">&gt;&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">block_dim</span><span class="p">,</span><span class="w"> </span><span class="n">GEMM</span><span class="o">::</span><span class="n">shared_memory_size</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">  </span><span class="n">cudaDeviceSynchronize</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">abc</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is important to notice that unlike the cuBLAS library cuBLASDx does <strong>not</strong> require moving data back to global memory after executing
+a BLAS operation. Nor does it require the input data to be loaded from global memory. Those properties can be a major performance advantage
+for certain use-cases. The list of possible optimizations includes but is not limited to:</p>
+<ul class="simple">
+<li><p>Fusing BLAS routines with custom pre- and post-processing.</p></li>
+<li><p>Fusing multiple BLAS operations together.</p></li>
+<li><p>Fusing BLAS and FFT operations (using cuFFTDx) together.</p></li>
+<li><p>Generating input matrices or parts of them.</p></li>
+</ul>
+</div>
+<div class="section" id="compilation">
+<h2>Compilation<a class="headerlink" href="#compilation" title="Permalink to this heading">¶</a></h2>
+<p>For instructions on how to compile programs with cuBLASDx see <a class="reference internal" href="installation.html#quick-installation-guide-label"><span class="std std-ref">Quick Installation Guide</span></a>.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Quick Installation Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="performance.html" class="btn btn-neutral float-right" title="Achieving High Performance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+
+<p style="color: gray;">
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" style="color: inherit;">Privacy Policy</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/" target="_blank" style="color: inherit;">Manage My Privacy</a>
+|
+<a href="https://www.nvidia.com/en-us/preferences/start/" target="_blank" style="color: inherit;">Do Not Sell or Share My Data</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/" target="_blank" style="color: inherit;">Terms of Service</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/accessibility/" target="_blank" style="color: inherit;">Accessibility</a>
+|
+<a href="https://www.nvidia.com/en-us/about-nvidia/company-policies/" target="_blank" style="color: inherit;">Corporate Policies</a>
+|
+<a href="https://www.nvidia.com/en-us/product-security/" target="_blank" style="color: inherit;">Product Security</a>
+|
+<a href="https://www.nvidia.com/en-us/contact/" target="_blank" style="color: inherit;">Contact</a>
+</p>
+
+<p>
+  Copyright &#169; 2022-2024, NVIDIA Corporation &amp; Affiliates. All rights reserved.
+</p>
+
+    <p></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+  a:link, a:visited {
+    color: #76b900;
+  }
+
+  a:hover {
+    color: #8c0;
+  }
+
+  .rst-content dl:not(.docutils) dt {
+    background: rgba(118, 185, 0, 0.1);
+    color: rgba(59,93,0,1);
+    border-top: solid 3px rgba(59,93,0,1);
+  }
+  </style>
+  
+
+</body>
+</html>

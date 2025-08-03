@@ -1,0 +1,4 @@
+dimension,warp_id,communication_time,computation_time
+1d,0,2656,4176
+2d,0,3238,4116
+3d,0,1376,4094
