@@ -225,10 +225,10 @@ __global__ void block_gemm_2d_double_mma(const double *A, const double *B, doubl
             int global_offset_upper = (warp_row_offset + lane_row_upper_offset) * N_BLOCK + warp_col_offset + lane_col_offset;
             int global_offset_lower = (warp_row_offset + lane_row_lower_offset) * N_BLOCK + warp_col_offset + lane_col_offset;
 
-            C[global_offset_upper] = c_frags[warp_row][warp_col][0];
-            C[global_offset_upper + 1] = c_frags[warp_row][warp_col][1];
-            C[global_offset_lower] = c_frags[warp_row][warp_col][2];
-            C[global_offset_lower + 1] = c_frags[warp_row][warp_col][3];
+            C[global_offset_upper] = alpha * c_frags[warp_row][warp_col][0] + beta * C[global_offset_upper];
+            C[global_offset_upper + 1] = alpha * c_frags[warp_row][warp_col][1] + beta * C[global_offset_upper + 1];
+            C[global_offset_lower] = alpha * c_frags[warp_row][warp_col][2] + beta * C[global_offset_lower];
+            C[global_offset_lower + 1] = alpha * c_frags[warp_row][warp_col][3] + beta * C[global_offset_lower + 1];
         }
     }
 }
