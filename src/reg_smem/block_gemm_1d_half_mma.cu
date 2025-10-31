@@ -81,10 +81,10 @@ __global__ void block_gemm_1d_half_mma(const half *A, const half *B, half *C, co
         return;
     }
 
-    uint32_t(*shmem_a_cache)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_M_BLOCK * WMMA_K_BLOCK / 2] =
-        reinterpret_cast<uint32_t(*)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_M_BLOCK * WMMA_K_BLOCK / 2]>(shmem_b + shmem_size_communication_block + warp_id * SUB_M_BLOCK * SMEM_K_BLOCK);
-    uint32_t(*shmem_b_cache)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_N_BLOCK * WMMA_K_BLOCK / 2] =
-        reinterpret_cast<uint32_t(*)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_N_BLOCK * WMMA_K_BLOCK / 2]>(shmem_b + shmem_size_communication_block + shmem_size_cache_a_block + warp_id * SUB_N_BLOCK * SMEM_K_BLOCK);
+    uint32_t (*shmem_a_cache)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_M_BLOCK * WMMA_K_BLOCK / 2] =
+        reinterpret_cast<uint32_t (*)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_M_BLOCK * WMMA_K_BLOCK / 2]>(shmem_b + shmem_size_communication_block + warp_id * SUB_M_BLOCK * SMEM_K_BLOCK);
+    uint32_t (*shmem_b_cache)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_N_BLOCK * WMMA_K_BLOCK / 2] =
+        reinterpret_cast<uint32_t (*)[SMEM_K_BLOCK / WMMA_K_BLOCK][WMMA_N_BLOCK * WMMA_K_BLOCK / 2]>(shmem_b + shmem_size_communication_block + shmem_size_cache_a_block + warp_id * SUB_N_BLOCK * SMEM_K_BLOCK);
 
     uint32_t a_frags[SUB_M_BLOCK / WMMA_M_BLOCK][REG_K_BLOCK / WMMA_K_BLOCK][4];
 
@@ -485,7 +485,7 @@ int main(int argc, char *argv[])
 
     std::cout << "Execution time: " << milliseconds << " ms" << std::endl;
     std::cout << "Performance: " << gflops << " GFLOPS (" << tflops << " TFLOPS)" << std::endl;
-    std::cout << "[hemeng_log],1d," << M_BLOCK << "," << N_BLOCK << "," << K_BLOCK << "," << NUM_RANK_BLOCK << "," << NUM_ALLOC_RANK_BLOCK <<","<<K_SPLIT_BLOCK<<","<<REG_K_SPLIT_BLOCK<<","<<SMEM_K_SPLIT_BLOCK<<","<< milliseconds << "," << tflops << std::endl;
+    std::cout << "[hemeng_log],1d," << M_BLOCK << "," << N_BLOCK << "," << K_BLOCK << "," << NUM_RANK_BLOCK << "," << NUM_ALLOC_RANK_BLOCK << "," << K_SPLIT_BLOCK << "," << REG_K_SPLIT_BLOCK << "," << SMEM_K_SPLIT_BLOCK << "," << milliseconds << "," << tflops << std::endl;
     // std::cout << "[hemeng_log],1d," << M_BLOCK << "," << NUM_RANK_BLOCK << "," << NUM_ALLOC_RANK_BLOCK << "," << milliseconds << "," << tflops << std::endl;
 
     half *h_C = (half *)malloc(M_BLOCK * N_BLOCK * sizeof(half));

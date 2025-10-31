@@ -218,6 +218,14 @@ namespace example {
         else if constexpr (std::is_same_v<value_type, double>) {
             return "double";
         }
+        else if constexpr (std::is_same_v<value_type, __nv_fp8_e5m2>)
+        {
+            return "fp8";
+        }
+        else if constexpr (std::is_same_v<value_type, cublasdx::tfloat32_t>)
+        {
+            return "tf32";
+        }
         else {
             return "unsupported";
         }

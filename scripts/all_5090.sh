@@ -1,7 +1,12 @@
 start=$(date +%s)
+bash fp8_block_square_5090.sh >> all_5090.log 2>&1
+echo "fp8_block_square_5090.sh finished" >> all_5090.log 2>&1
 
 bash fp16_block_square_5090.sh >> all_5090.log 2>&1
 echo "fp16_block_square_5090.sh finished" >> all_5090.log 2>&1
+
+bash tf32_block_square_5090.sh >> all_5090.log 2>&1
+echo "tf32_block_square_5090.sh finished" >> all_5090.log 2>&1
 
 bash fp16_block_vs_tflops_5090.sh >> all_5090.log 2>&1
 echo "fp16_block_vs_tflops_5090.sh finished" >> all_5090.log 2>&1

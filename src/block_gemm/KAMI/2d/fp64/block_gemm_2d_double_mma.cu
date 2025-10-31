@@ -1,4 +1,3 @@
-
 #include <mma.h>
 #include <cuda_runtime.h>
 #include <iostream>
@@ -283,7 +282,6 @@ int main(int argc, char *argv[])
     cudaEventRecord(stop);
 
     cudaEventSynchronize(stop);
-
 
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess)

@@ -26,21 +26,15 @@ template<unsigned int Arch>
 int single_gemm_performance() {
     using namespace cublasdx;
 
-    // Parameters m, n, k define the dimensions of matrices A, B, and C.
-    // constexpr unsigned int m = 64;
-    // constexpr unsigned int n = 64;
-    // constexpr unsigned int k = 64;
     constexpr unsigned int m = INPUT_M;
     constexpr unsigned int n = INPUT_M;
     constexpr unsigned int k = INPUT_K;
 
     // Choose block size, or set to 0 to use library-suggested value.
     constexpr unsigned int BlockSize = 0;
-    // constexpr unsigned int BlockSize = 128;
 
     // Flag to use library-suggested leading dimension (potential performance improvement).
     constexpr bool UseSuggestedLD = true;
-    // constexpr bool UseSuggestedLD = false;
 
     using PA = __half;
     using PB = __half;

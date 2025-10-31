@@ -4,7 +4,10 @@ import seaborn as sns
 from matplotlib.patches import Patch
 
 sns.set_theme(style='whitegrid',
-              rc={'font.family': 'Times New Roman', 'font.weight': 'bold'})
+              rc={
+                  'font.family': 'Times New Roman',
+                  'font.weight': 'bold'
+              })
 
 marker_size = 12
 line_width = 3
@@ -24,17 +27,23 @@ cublasdx_df["dimension"] = "cuBLASDx"
 kami_dfs = []
 for path in kami_paths.values():
     df = pd.read_csv(path, header=None)
-    df.columns = ["dimension", "m", "n", "k", "num1", "NUM_ALLOC_RANK_BLOCK", "tflops", "blocksize"]
+    df.columns = [
+        "dimension", "m", "n", "k", "num1", "NUM_ALLOC_RANK_BLOCK", "tflops",
+        "blocksize"
+    ]
     df["dimension"] = "KAMI"
     kami_dfs.append(df)
 kami_df = pd.concat(kami_dfs, ignore_index=True)
-kami_df = kami_df.groupby(["dimension", "m", "n", "k"], as_index=False)["tflops"].max()
-
+kami_df = (kami_df.drop_duplicates(subset=["dimension", "m", "n", "k"]).
+           loc[:, ["dimension", "m", "n", "k", "tflops"]])
 cutlass_df = pd.read_csv(cutlass_path, header=None)
-cutlass_df.columns = ["m", "n", "k", "blocksize", "gridsize", "gflops", "tflops"]
+cutlass_df.columns = [
+    "m", "n", "k", "blocksize", "gridsize", "gflops", "tflops"
+]
 cutlass_df = cutlass_df[cutlass_df["m"] == cutlass_df["n"]]
 cutlass_df["dimension"] = "CUTLASS"
-cutlass_df = cutlass_df.groupby(["dimension", "m", "n", "k"], as_index=False)["tflops"].max()
+cutlass_df = (cutlass_df.drop_duplicates(subset=["dimension", "m", "n", "k"]).
+              loc[:, ["dimension", "m", "n", "k", "tflops"]])
 
 all_data = pd.concat([kami_df, cublasdx_df, cutlass_df], ignore_index=True)
 
@@ -50,7 +59,8 @@ hatch_styles = {
 }
 unique_dims = ["cuBLASDx", "CUTLASS", "KAMI"]
 
-y_max = all_data[(all_data["m"] == all_data["n"]) & (all_data["m"].isin(m_n_values))]["tflops"].max()
+y_max = all_data[(all_data["m"] == all_data["n"])
+                 & (all_data["m"].isin(m_n_values))]["tflops"].max()
 y_max = (int(y_max / 0.5) + 1) * 0.5
 
 for k in k_values:
@@ -65,19 +75,21 @@ for k in k_values:
     positions = list(range(len(m_values)))
     n_bars = len(unique_dims)
     total_width = bar_width * n_bars
-    start_pos = -total_width/2 + bar_width/2
+    start_pos = -total_width / 2 + bar_width / 2
 
     for i, dim in enumerate(unique_dims):
         dim_data = k_data[k_data["dimension"] == dim]
-        dim_data = dim_data.groupby("m")["tflops"].max().reindex(m_values, fill_value=0)
+        dim_data = (dim_data.drop_duplicates(
+            subset=["m"]).set_index("m")["tflops"].reindex(m_values,
+                                                           fill_value=0))
         bar_pos = [p + start_pos + i * bar_width for p in positions]
         bars = ax.bar(bar_pos,
-                     dim_data,
-                     bar_width,
-                     facecolor=colors[dim],
-                     edgecolor=edges[dim],
-                     linewidth=1.2,
-                     hatch=hatch_styles[dim][0])
+                      dim_data,
+                      bar_width,
+                      facecolor=colors[dim],
+                      edgecolor=edges[dim],
+                      linewidth=1.2,
+                      hatch=hatch_styles[dim][0])
         for bar in bars:
             bar.set_hatch(hatch_styles[dim][0])
             bar.set_edgecolor(hatch_styles[dim][1])
@@ -85,7 +97,7 @@ for k in k_values:
     ax.set_xlabel('Matrix order (m & n)', fontsize=font_size, weight='bold')
     ax.set_xticks(positions)
     ax.set_xticklabels([str(m) for m in m_values], fontsize=font_size)
-    
+
     ax.tick_params(axis='x', labelsize=font_size)
 
     yticks = ax.get_yticks()
@@ -103,15 +115,14 @@ for k in k_values:
         spine.set_color('black')
 
     plt.grid(True, linestyle='--')
-    plt.savefig(f"lowrank_H200_k_{k}.pdf", bbox_inches='tight', pad_inches=0.02)
+    plt.savefig(f"lowrank_H200_k_{k}.pdf",
+                bbox_inches='tight',
+                pad_inches=0.02)
 
 for k in [16, 32]:
     print(f"\n=================== k = {k} ===================")
-    k_data = all_data[
-        (all_data["k"] == k) & 
-        (all_data["m"] == all_data["n"]) & 
-        (all_data["m"].isin(m_n_values))
-    ]
+    k_data = all_data[(all_data["k"] == k) & (all_data["m"] == all_data["n"]) &
+                      (all_data["m"].isin(m_n_values))]
     grouped = k_data.pivot(index='m', columns='dimension', values='tflops')
 
     if "KAMI" in grouped and "cuBLASDx" in grouped:
@@ -121,7 +132,9 @@ for k in [16, 32]:
         for m in speedup_cublasdx.index:
             kami_val = grouped.loc[m, "KAMI"]
             dx_val = grouped.loc[m, "cuBLASDx"]
-            print(f"{m}\t{kami_val:.2f}\t{dx_val:.2f}\t\t{kami_val / dx_val:.2f}x")
+            print(
+                f"{m}\t{kami_val:.2f}\t{dx_val:.2f}\t\t{kami_val / dx_val:.2f}x"
+            )
         print(f"Average speedup: {speedup_cublasdx.mean():.2f}x")
         print(f"Maximum speedup: {speedup_cublasdx.max():.2f}x")
 
@@ -132,15 +145,14 @@ for k in [16, 32]:
         for m in speedup_cutlass.index:
             kami_val = grouped.loc[m, "KAMI"]
             cutlass_val = grouped.loc[m, "CUTLASS"]
-            print(f"{m}\t{kami_val:.2f}\t{cutlass_val:.2f}\t\t{kami_val / cutlass_val:.2f}x")
+            print(
+                f"{m}\t{kami_val:.2f}\t{cutlass_val:.2f}\t\t{kami_val / cutlass_val:.2f}x"
+            )
         print(f"Average speedup: {speedup_cutlass.mean():.2f}x")
         print(f"Maximum speedup: {speedup_cutlass.max():.2f}x")
 
-
-        # Create legend for lowrank plot
 fig = plt.figure(figsize=(0, 0))
 
-# Define colors and styles
 colors = {"KAMI": "#9fcff3", "cuBLASDx": "#f4a7a7", "CUTLASS": "#c3e2b4"}
 edges = {"KAMI": "#2b5dad", "cuBLASDx": "#a33d3d", "CUTLASS": "#4b7d3a"}
 hatch_styles = {
@@ -148,35 +160,27 @@ hatch_styles = {
     "KAMI": ('//', edges["KAMI"]),
     "CUTLASS": ('xx', edges["CUTLASS"])
 }
-# unique_dims = ["cuBLASDx", "KAMI", "CUTLASS"]
 
-# Create legend handles
 legend_elements = [
     Patch(facecolor=colors[dim],
           edgecolor=edges[dim],
           hatch=hatch_styles[dim][0],
           label=dim,
-          linewidth=1.2)
-    for dim in ["cuBLASDx", "CUTLASS", "KAMI"]
+          linewidth=1.2) for dim in ["cuBLASDx", "CUTLASS", "KAMI"]
 ]
 
-# Create and configure legend
-legend = plt.legend(
-    handles=legend_elements,
-    loc='center',
-    ncol=3,
-    frameon=False,
-    fontsize=20,
-    labelspacing=0.2,
-    columnspacing=0.6,
-    handletextpad=0.3,
-    borderpad=0.1
-)
+legend = plt.legend(handles=legend_elements,
+                    loc='center',
+                    ncol=3,
+                    frameon=False,
+                    fontsize=20,
+                    labelspacing=0.2,
+                    columnspacing=0.6,
+                    handletextpad=0.3,
+                    borderpad=0.1)
 
-# Remove axes
 plt.axis('off')
 
-# Save legend
 plt.savefig("lowrank_legend.pdf",
             bbox_inches='tight',
             pad_inches=0,

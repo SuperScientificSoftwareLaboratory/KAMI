@@ -43,8 +43,7 @@ def load_and_filter(path, name):
         df = (df[(df["m"] == df["n"]) & (df["m"] == df["k"])])
         df = df[df["m"].isin(mnk_keep)]
         df["mnk"] = df["m"]
-        best = df.groupby("mnk")["tflops"].median().reset_index()
-        return best.sort_values("mnk")
+        return df.sort_values("mnk")
     else:
         df = pd.read_csv(path,
                          header=None,
@@ -55,8 +54,7 @@ def load_and_filter(path, name):
         df['mnk'] = df['mnk'].astype(int)
 
     df = df[df['mnk'].isin(mnk_keep)]
-    best = df.groupby("mnk")['tflops'].max().reset_index()
-    return best.sort_values("mnk")
+    return df.sort_values("mnk")
 
 
 filtered_data = {
@@ -64,7 +62,7 @@ filtered_data = {
     for name, path in file_paths.items()
 }
 
-plt.figure(figsize=(4, 5))
+plt.figure(figsize=(3.5, 5))
 markers = {
     'KAMI-1D': 'o',
     'KAMI-2D': 's',
@@ -89,17 +87,14 @@ cutlass_df = filtered_data["CUTLASS"]
 
 for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
     kami_df = filtered_data[name]
-    common_mnk = kami_df['mnk'].isin(cutlass_df['mnk'])
-    kami_df = kami_df[common_mnk]
-    matched_cutlass = cutlass_df[cutlass_df['mnk'].isin(kami_df['mnk'])]
-
-    kami_df = kami_df.sort_values("mnk")
-    matched_cutlass = matched_cutlass.sort_values("mnk")
-
-    speedup = kami_df['tflops'].values / matched_cutlass['tflops'].values
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    cutlass_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_cutlass'))
+    speedup = pair['tflops_kami'].values / pair['tflops_cutlass'].values
 
     print(f"\n{name} speedup over CUTLASS:")
-    for i, mnk in enumerate(kami_df['mnk']):
+    for i, mnk in enumerate(pair['mnk']):
         print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
     print(f"{name} average speedup: {speedup.mean():.2f}x")
     print(f"{name} maximum speedup: {speedup.max():.2f}x")
@@ -109,17 +104,15 @@ dx_df = filtered_data["cuBLASDx"]
 
 for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
     kami_df = filtered_data[name]
-    common_mnk = kami_df['mnk'].isin(dx_df['mnk'])
-    kami_df = kami_df[common_mnk]
-    matched_dx = dx_df[dx_df['mnk'].isin(kami_df['mnk'])]
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    dx_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_dx'))
 
-    kami_df = kami_df.sort_values("mnk")
-    matched_dx = matched_dx.sort_values("mnk")
-
-    speedup = kami_df['tflops'].values / matched_dx['tflops'].values
+    speedup = pair['tflops_kami'].values / pair['tflops_dx'].values
 
     print(f"\n{name} speedup over cuBLASDx:")
-    for i, mnk in enumerate(kami_df['mnk']):
+    for i, mnk in enumerate(pair['mnk']):
         print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
     print(f"{name} average speedup: {speedup.mean():.2f}x")
     print(f"{name} maximum speedup: {speedup.max():.2f}x")
@@ -184,8 +177,7 @@ def load_and_filter(path, name):
         df = df[(df["m"] == df["n"]) & (df["m"] == df["k"])]
         df = df[df["m"].isin(mnk_keep)]
         df["mnk"] = df["m"]
-        best = df.groupby("mnk")["tflops"].median().reset_index()
-        return best.sort_values("mnk")
+        return df.sort_values("mnk")
     else:
         df = pd.read_csv(path,
                          header=None,
@@ -196,8 +188,7 @@ def load_and_filter(path, name):
         df['mnk'] = df['mnk'].astype(int)
 
     df = df[df['mnk'].isin(mnk_keep)]
-    best = df.groupby("mnk")['tflops'].max().reset_index()
-    return best.sort_values("mnk")
+    return df.sort_values("mnk")
 
 
 filtered_data = {
@@ -205,7 +196,7 @@ filtered_data = {
     for name, path in file_paths.items()
 }
 
-plt.figure(figsize=(4, 5))
+plt.figure(figsize=(3.5, 5))
 markers = {
     'KAMI-1D': 'o',
     'KAMI-2D': 's',
@@ -232,17 +223,15 @@ cutlass_df = filtered_data["CUTLASS"]
 
 for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
     kami_df = filtered_data[name]
-    common_mnk = kami_df['mnk'].isin(cutlass_df['mnk'])
-    kami_df = kami_df[common_mnk]
-    matched_cutlass = cutlass_df[cutlass_df['mnk'].isin(kami_df['mnk'])]
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    cutlass_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_cutlass'))
 
-    kami_df = kami_df.sort_values("mnk")
-    matched_cutlass = matched_cutlass.sort_values("mnk")
-
-    speedup = kami_df['tflops'].values / matched_cutlass['tflops'].values
+    speedup = pair['tflops_kami'].values / pair['tflops_cutlass'].values
 
     print(f"\n{name} speedup over CUTLASS:")
-    for i, mnk in enumerate(kami_df['mnk']):
+    for i, mnk in enumerate(pair['mnk']):
         print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
     print(f"{name} average speedup: {speedup.mean():.2f}x")
     print(f"{name} maximum speedup: {speedup.max():.2f}x")
@@ -252,17 +241,15 @@ dx_df = filtered_data["cuBLASDx"]
 
 for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
     kami_df = filtered_data[name]
-    common_mnk = kami_df['mnk'].isin(dx_df['mnk'])
-    kami_df = kami_df[common_mnk]
-    matched_dx = dx_df[dx_df['mnk'].isin(kami_df['mnk'])]
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    dx_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_dx'))
 
-    kami_df = kami_df.sort_values("mnk")
-    matched_dx = matched_dx.sort_values("mnk")
-
-    speedup = kami_df['tflops'].values / matched_dx['tflops'].values
+    speedup = pair['tflops_kami'].values / pair['tflops_dx'].values
 
     print(f"\n{name} speedup over cuBLASDx:")
-    for i, mnk in enumerate(kami_df['mnk']):
+    for i, mnk in enumerate(pair['mnk']):
         print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
     print(f"{name} average speedup: {speedup.mean():.2f}x")
     print(f"{name} maximum speedup: {speedup.max():.2f}x")
@@ -303,8 +290,8 @@ file_paths = {
     "../../logs/block_gemm/square/5090/fp16_block_square_2d_5090.csv",
     "KAMI-3D":
     "../../logs/block_gemm/square/5090/fp16_block_square_3d_5090.csv",
-    "cuBLASDx": "../../logs/block_gemm/square/5090/cublasdx.csv",
-    "CUTLASS": "../../logs/block_gemm/square/5090/CUTLASS.csv"
+    "cuBLASDx": "../../logs/block_gemm/square/5090/fp16_cublasdx.csv",
+    "CUTLASS": "../../logs/block_gemm/square/5090/fp16_CUTLASS.csv"
 }
 
 
@@ -323,8 +310,7 @@ def load_and_filter(path, name):
         df = df[(df["m"] == df["n"]) & (df["m"] == df["k"])]
         df = df[df["m"].isin(mnk_keep)]
         df["mnk"] = df["m"]
-        best = df.groupby("mnk")["tflops"].median().reset_index()
-        return best.sort_values("mnk")
+        return df.sort_values("mnk")
     else:
         df = pd.read_csv(path,
                          header=None,
@@ -335,8 +321,7 @@ def load_and_filter(path, name):
         df['mnk'] = df['mnk'].astype(int)
 
     df = df[df['mnk'].isin(mnk_keep)]
-    best = df.loc[df.groupby("mnk")['tflops'].idxmax()]
-    return best.sort_values("mnk")
+    return df.sort_values("mnk")
 
 
 filtered_data = {
@@ -344,7 +329,7 @@ filtered_data = {
     for name, path in file_paths.items()
 }
 
-plt.figure(figsize=(4, 5))
+plt.figure(figsize=(3.5, 5))
 markers = {
     'KAMI-1D': 'o',
     'KAMI-2D': 's',
@@ -369,11 +354,18 @@ ref_vals_cutlass = filtered_data["CUTLASS"][
 
 print("\n====== Speedup Analysis (KAMI vs. CUTLASS) ======")
 for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
-    df = filtered_data[name][filtered_data[name]['mnk'].isin(mnk_keep)]
-    speedup = df['tflops'].values / ref_vals_cutlass
+    kami_df = filtered_data[name]
+    cutlass_df = filtered_data["CUTLASS"]
+
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    cutlass_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_cutlass'))
+
+    speedup = pair['tflops_kami'].values / pair['tflops_cutlass'].values
 
     print(f"\n{name} speedup over CUTLASS:")
-    for i, mnk in enumerate(df['mnk']):
+    for i, mnk in enumerate(pair['mnk']):
         print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
     print(f"{name} average speedup: {speedup.mean():.2f}x")
     print(f"{name} maximum speedup: {speedup.max():.2f}x")
@@ -383,11 +375,18 @@ ref_vals_dx = filtered_data["cuBLASDx"][filtered_data["cuBLASDx"]['mnk'].isin(
 
 print("\n====== Speedup Analysis (KAMI vs. cuBLASDx) ======")
 for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
-    df = filtered_data[name][filtered_data[name]['mnk'].isin(mnk_speedup)]
-    speedup = df['tflops'].values / ref_vals_dx
+    kami_df = filtered_data[name]
+    dx_df = filtered_data["cuBLASDx"]
+
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    dx_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_dx'))
+
+    speedup = pair['tflops_kami'].values / pair['tflops_dx'].values
 
     print(f"\n{name} speedup over cuBLASDx:")
-    for i, mnk in enumerate(df['mnk']):
+    for i, mnk in enumerate(pair['mnk']):
         print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
     print(f"{name} average speedup: {speedup.mean():.2f}x")
     print(f"{name} maximum speedup: {speedup.max():.2f}x")
@@ -435,12 +434,10 @@ for key, path in file_paths.items():
                      ])
     df['mnk'] = df['mnk'].astype(int)
     df['Block size'] = df['Block size'].astype(int)
-
-    df_max = df.loc[df.groupby('mnk')['tflops'].idxmax()]
-    df_max = df_max.sort_values(by='mnk')
+    df_max = df.sort_values(by='mnk')
     dataframes[key] = df_max
 
-plt.figure(figsize=(4, 5))
+plt.figure(figsize=(3.5, 5))
 markers = {'KAMI-1D': 'o', 'KAMI-2D': 's', 'KAMI-3D': '^'}
 line_handles = {}
 
@@ -509,53 +506,47 @@ df_3d = df_3d[df_3d['m'].isin(mnk_keep)]
 df_basic = df_basic[df_basic['m'].isin(mnk_keep)]
 
 
-def get_best(df):
-    return df.groupby(['m', 'n', 'k'],
-                      as_index=False)['tflops'].max()[['m', 'tflops'
-                                                       ]].sort_values('m')
+def get_series(df):
+    return df.sort_values(['m', 'n', 'k'])[['m', 'tflops']]
 
 
-df_1d_sorted = get_best(df_1d)
-df_2d_sorted = get_best(df_2d)
-df_3d_sorted = get_best(df_3d)
+df_1d_sorted = get_series(df_1d)
+df_2d_sorted = get_series(df_2d)
+df_3d_sorted = get_series(df_3d)
 df_basic_sorted = df_basic.sort_values('m')[['m', 'tflops']]
 
 for df, name in zip([df_1d_sorted, df_2d_sorted, df_3d_sorted],
                     ['KAMI-1D', 'KAMI-2D', 'KAMI-3D']):
-    speedup = df['tflops'].values / df_basic_sorted['tflops'].values
+    pair = pd.merge(df, df_basic_sorted, on='m', suffixes=('_kami', '_base'))
+    speedup = pair['tflops_kami'].values / pair['tflops_base'].values
     print(f"\n{name} average speedup: {speedup.mean():.2f}x")
     print(f"{name} maximum speedup: {speedup.max():.2f}x")
 
-plt.figure(figsize=(4, 5))
+plt.figure(figsize=(3.5, 5))
 
 markers = {'KAMI-1D': 'o', 'KAMI-2D': 's', 'KAMI-3D': '^', 'SYCL-Bench': 'P'}
 line_handles = {}
 
-line_handles['KAMI-1D'], = plt.plot(df_1d_sorted['m'],
-                                    df_1d_sorted['tflops'],
-                                    marker=markers['KAMI-1D'],
-                                    label='KAMI-1D',
-                                    markersize=marker_size,
-                                    linewidth=line_width)
-line_handles['KAMI-2D'], = plt.plot(df_2d_sorted['m'],
-                                    df_2d_sorted['tflops'],
-                                    marker=markers['KAMI-2D'],
-                                    label='KAMI-2D',
-                                    markersize=marker_size,
-                                    linewidth=line_width)
-line_handles['KAMI-3D'], = plt.plot(df_3d_sorted['m'],
-                                    df_3d_sorted['tflops'],
-                                    marker=markers['KAMI-3D'],
-                                    label='KAMI-3D',
-                                    markersize=marker_size,
-                                    linewidth=line_width)
-line_handles['SYCL-Bench'], = plt.plot(df_basic_sorted['m'],
-                                       df_basic_sorted['tflops'],
-                                       marker=markers['SYCL-Bench'],
-                                       label='SYCL-Bench',
-                                       markersize=marker_size,
-                                       linewidth=line_width,
-                                       color='slategray')
+for df_sorted, label in zip([df_1d_sorted, df_2d_sorted, df_3d_sorted],
+                            ['KAMI-1D', 'KAMI-2D', 'KAMI-3D']):
+    pair = pd.merge(df_sorted,
+                    df_basic_sorted,
+                    on='m',
+                    suffixes=('_kami', '_base'))
+    plt.plot(pair['m'],
+             pair['tflops_kami'],
+             marker=markers[label],
+             label=label,
+             markersize=marker_size,
+             linewidth=line_width)
+
+plt.plot(df_basic_sorted['m'],
+         df_basic_sorted['tflops'],
+         marker=markers['SYCL-Bench'],
+         label='SYCL-Bench',
+         markersize=marker_size,
+         linewidth=line_width,
+         color='slategray')
 
 plt.xlabel("Matrix order", fontsize=font_size, weight='bold')
 plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'{x:3.1f}'))
@@ -601,7 +592,7 @@ colors = {
     'KAMI-3D': color_pattern[2]
 }
 
-fig = plt.figure(figsize=(8, 0.5))
+fig = plt.figure(figsize=(9, 0.5))
 
 lines = []
 labels = ['cuBLASDx', 'CUTLASS', 'SYCL-Bench', 'KAMI-1D', 'KAMI-2D', 'KAMI-3D']
@@ -622,9 +613,285 @@ legend = plt.legend(lines,
                     frameon=False,
                     labelspacing=0.1,
                     borderpad=0.1,
-                    columnspacing=1.0,
+                    columnspacing=1.8,
                     handletextpad=0.4)
 
 plt.axis('off')
 
 plt.savefig("gemm_legend.pdf", bbox_inches='tight', pad_inches=0.02)
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set_theme(style='whitegrid',
+              rc={
+                  'font.family': 'Times New Roman',
+                  'font.weight': 'bold'
+              })
+
+mnk_keep = [32, 64, 128, 256]
+mnk_speedup = [64, 128, 256]
+mnk_speedup_dx = [32, 64, 128]
+marker_size = 12
+line_width = 3
+font_size = 24
+legend_font_size = 20
+
+file_paths = {
+    "KAMI-1D":
+    "../../logs/block_gemm/square/5090/fp8_block_square_1d_5090.csv",
+    "KAMI-2D":
+    "../../logs/block_gemm/square/5090/fp8_block_square_2d_5090.csv",
+    "KAMI-3D":
+    "../../logs/block_gemm/square/5090/fp8_block_square_3d_5090.csv",
+    "cuBLASDx": "../../logs/block_gemm/square/5090/fp8_cublasdx.csv",
+    "CUTLASS": "../../logs/block_gemm/square/5090/fp8_CUTLASS.csv"
+}
+
+
+def load_and_filter(path, name):
+    if name == "cuBLASDx":
+        df = pd.read_csv(
+            path,
+            header=None,
+            names=["mnk", "n", "k", "Block size", "gflops", "tflops"])
+        df['mnk'] = df['mnk'].astype(int)
+    elif name == "CUTLASS":
+        df = pd.read_csv(
+            path,
+            header=None,
+            names=["m", "n", "k", "blocksize", "gridsize", "gflops", "tflops"])
+        df = df[(df["m"] == df["n"]) & (df["m"] == df["k"])]
+        df = df[df["m"].isin(mnk_keep)]
+        df["mnk"] = df["m"]
+        return df.sort_values("mnk")
+    else:
+        df = pd.read_csv(path,
+                         header=None,
+                         names=[
+                             "dimension", "mnk", "n", "k", "NUM_RANK",
+                             "tflops", "Block size"
+                         ])
+        df['mnk'] = df['mnk'].astype(int)
+    df = df[df['mnk'].isin(mnk_keep)]
+    return df.sort_values("mnk")
+
+
+filtered_data = {
+    name: load_and_filter(path, name)
+    for name, path in file_paths.items()
+}
+
+plt.figure(figsize=(3.5, 5))
+markers = {
+    'KAMI-1D': 'o',
+    'KAMI-2D': 's',
+    'KAMI-3D': '^',
+    'cuBLASDx': 'D',
+    'CUTLASS': 'X'
+}
+line_handles = {}
+
+for name, df in filtered_data.items():
+    df = df[df['mnk'].isin(mnk_keep)]
+    line, = plt.plot(df['mnk'],
+                     df['tflops'],
+                     label=name,
+                     marker=markers[name],
+                     markersize=marker_size,
+                     linewidth=line_width)
+    line_handles[name] = line
+
+ref_vals_cutlass = filtered_data["CUTLASS"][
+    filtered_data["CUTLASS"]['mnk'].isin(mnk_keep)]['tflops'].values
+
+print("\n====== Speedup Analysis (KAMI vs. CUTLASS) FP8 ======")
+for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
+    kami_df = filtered_data[name]
+    cutlass_df = filtered_data["CUTLASS"]
+
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    cutlass_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_cutlass'))
+
+    print(f"\n{name} tflops:")
+    print(pair['tflops_kami'].values)
+    print(pair['tflops_cutlass'].values)
+
+    speedup = pair['tflops_kami'].values / pair['tflops_cutlass'].values
+
+    print(f"\n{name} speedup over CUTLASS:")
+    for i, mnk in enumerate(pair['mnk']):
+        print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
+    print(f"{name} average speedup: {speedup.mean():.2f}x")
+    print(f"{name} maximum speedup: {speedup.max():.2f}x")
+
+ref_vals_dx = filtered_data["cuBLASDx"][filtered_data["cuBLASDx"]['mnk'].isin(
+    mnk_speedup)]['tflops'].values
+
+print("\n====== Speedup Analysis (KAMI vs. cuBLASDx) ======")
+for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
+    kami_df = filtered_data[name]
+    dx_df = filtered_data["cuBLASDx"]
+
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    dx_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_dx'))
+
+    speedup = pair['tflops_kami'].values / pair['tflops_dx'].values
+    print(f"\n{name} speedup over cuBLASDx:")
+    for i, mnk in enumerate(pair['mnk']):
+        print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
+    print(f"{name} average speedup: {speedup.mean():.2f}x")
+    print(f"{name} maximum speedup: {speedup.max():.2f}x")
+
+plt.xlabel("Matrix order", fontsize=font_size, weight='bold')
+plt.xticks(fontsize=font_size)
+plt.yticks(fontsize=font_size)
+plt.grid(True, linestyle='--')
+ax = plt.gca()
+for spine in ['top', 'bottom', 'left', 'right']:
+    ax.spines[spine].set_color('black')
+
+plt.savefig("5090_FP8.pdf", bbox_inches='tight', pad_inches=0.02)
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set_theme(style='whitegrid',
+              rc={
+                  'font.family': 'Times New Roman',
+                  'font.weight': 'bold'
+              })
+
+mnk_keep = [16, 32, 64, 128]
+mnk_speedup = [16, 32, 64, 128]
+mnk_speedup_dx = [16, 32, 64]
+marker_size = 12
+line_width = 3
+font_size = 24
+legend_font_size = 20
+
+file_paths = {
+    "KAMI-1D":
+    "../../logs/block_gemm/square/5090/tf32_block_square_1d_5090.csv",
+    "KAMI-2D":
+    "../../logs/block_gemm/square/5090/tf32_block_square_2d_5090.csv",
+    "KAMI-3D":
+    "../../logs/block_gemm/square/5090/tf32_block_square_3d_5090.csv",
+    "cuBLASDx": "../../logs/block_gemm/square/5090/tf32_cublasdx.csv",
+    "CUTLASS": "../../logs/block_gemm/square/5090/tf32_CUTLASS.csv"
+}
+
+
+def load_and_filter(path, name):
+    if name == "cuBLASDx":
+        df = pd.read_csv(
+            path,
+            header=None,
+            names=["mnk", "n", "k", "Block size", "gflops", "tflops"])
+        df['mnk'] = df['mnk'].astype(int)
+    elif name == "CUTLASS":
+        df = pd.read_csv(
+            path,
+            header=None,
+            names=["m", "n", "k", "blocksize", "gridsize", "gflops", "tflops"])
+        df = df[(df["m"] == df["n"]) & (df["m"] == df["k"])]
+        df = df[df["m"].isin(mnk_keep)]
+        df["mnk"] = df["m"]
+        return df.sort_values("mnk")
+    else:
+        df = pd.read_csv(path,
+                         header=None,
+                         names=[
+                             "dimension", "mnk", "n", "k", "NUM_RANK",
+                             "tflops", "Block size"
+                         ])
+        df['mnk'] = df['mnk'].astype(int)
+    df = df[df['mnk'].isin(mnk_keep)]
+    return df.sort_values("mnk")
+
+
+filtered_data = {
+    name: load_and_filter(path, name)
+    for name, path in file_paths.items()
+}
+
+plt.figure(figsize=(3.5, 5))
+markers = {
+    'KAMI-1D': 'o',
+    'KAMI-2D': 's',
+    'KAMI-3D': '^',
+    'cuBLASDx': 'D',
+    'CUTLASS': 'X'
+}
+line_handles = {}
+
+for name, df in filtered_data.items():
+    df = df[df['mnk'].isin(mnk_keep)]
+    line, = plt.plot(df['mnk'],
+                     df['tflops'],
+                     label=name,
+                     marker=markers[name],
+                     markersize=marker_size,
+                     linewidth=line_width)
+    line_handles[name] = line
+
+ref_vals_cutlass = filtered_data["CUTLASS"][
+    filtered_data["CUTLASS"]['mnk'].isin(mnk_keep)]['tflops'].values
+
+print("\n====== Speedup Analysis (KAMI vs. CUTLASS) TF32 ======")
+for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
+    kami_df = filtered_data[name]
+    cutlass_df = filtered_data["CUTLASS"]
+
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    cutlass_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_cutlass'))
+    print(f"\n{name} tflops:")
+    print(pair['tflops_kami'].values)
+    print(pair['tflops_cutlass'].values)
+
+    speedup = pair['tflops_kami'].values / pair['tflops_cutlass'].values
+
+    print(f"\n{name} speedup over CUTLASS:")
+    for i, mnk in enumerate(pair['mnk']):
+        print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
+    print(f"{name} average speedup: {speedup.mean():.2f}x")
+    print(f"{name} maximum speedup: {speedup.max():.2f}x")
+
+ref_vals_dx = filtered_data["cuBLASDx"][filtered_data["cuBLASDx"]['mnk'].isin(
+    mnk_speedup)]['tflops'].values
+
+print("\n====== Speedup Analysis (KAMI vs. cuBLASDx) ======")
+for name in ["KAMI-1D", "KAMI-2D", "KAMI-3D"]:
+    kami_df = filtered_data[name]
+    dx_df = filtered_data["cuBLASDx"]
+
+    pair = pd.merge(kami_df[['mnk', 'tflops']].sort_values('mnk'),
+                    dx_df[['mnk', 'tflops']].sort_values('mnk'),
+                    on='mnk',
+                    suffixes=('_kami', '_dx'))
+
+    speedup = pair['tflops_kami'].values / pair['tflops_dx'].values
+
+    print(f"\n{name} speedup over cuBLASDx:")
+    for i, mnk in enumerate(pair['mnk']):
+        print(f"Matrix size {mnk}: {speedup[i]:.2f}x")
+    print(f"{name} average speedup: {speedup.mean():.2f}x")
+    print(f"{name} maximum speedup: {speedup.max():.2f}x")
+
+plt.xlabel("Matrix order", fontsize=font_size, weight='bold')
+plt.xticks(fontsize=font_size)
+plt.yticks(fontsize=font_size)
+plt.grid(True, linestyle='--')
+ax = plt.gca()
+for spine in ['top', 'bottom', 'left', 'right']:
+    ax.spines[spine].set_color('black')
+
+plt.savefig("5090_TF32.pdf", bbox_inches='tight', pad_inches=0.02)

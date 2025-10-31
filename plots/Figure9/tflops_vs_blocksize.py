@@ -51,7 +51,9 @@ for key in ["1d", "2d", "3d"]:
     df = dataframes[key]
     sub_df = df[df["mnk"] == 64][["Block size", "tflops"]]
     if not sub_df.empty:
-        sub_df = sub_df.groupby("Block size").mean().reindex(block_order)
+        sub_df = (sub_df.drop_duplicates(
+            subset=["Block size"]).set_index("Block size").reindex(block_order)
+                  )
         plt.plot(x_vals,
                  sub_df["tflops"],
                  marker=markers[key],
@@ -104,9 +106,17 @@ df_1d = dataframes['1d'][dataframes['1d']['mnk'] == 64]
 df_2d = dataframes['2d'][dataframes['2d']['mnk'] == 64]
 df_3d = dataframes['3d'][dataframes['3d']['mnk'] == 64]
 
-tflops_1d_max = df_1d.groupby('Block size')['tflops'].mean().max()
-tflops_2d_max = df_2d.groupby('Block size')['tflops'].mean().max()
-tflops_3d_max = df_3d.groupby('Block size')['tflops'].mean().max()
+tflops_1d_max = (df_1d[["Block size", "tflops"
+                        ]].drop_duplicates(subset=["Block size"]).set_index(
+                            "Block size").reindex(block_order)["tflops"].max())
+
+tflops_2d_max = (df_2d[["Block size", "tflops"
+                        ]].drop_duplicates(subset=["Block size"]).set_index(
+                            "Block size").reindex(block_order)["tflops"].max())
+
+tflops_3d_max = (df_3d[["Block size", "tflops"
+                        ]].drop_duplicates(subset=["Block size"]).set_index(
+                            "Block size").reindex(block_order)["tflops"].max())
 
 print(f"Max TFLOPS for 1D: {tflops_1d_max:.2f}")
 print(f"Max TFLOPS for 2D: {tflops_2d_max:.2f}")

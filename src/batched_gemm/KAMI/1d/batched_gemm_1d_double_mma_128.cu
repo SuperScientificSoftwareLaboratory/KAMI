@@ -45,7 +45,6 @@ const int shmem_size_block_gemm = (SUB_N_BLOCK / NUM_PIPE_N_BLOCK) * (K_BLOCK / 
 
 #define THREADS_PER_BLOCK (NUM_RANK_BLOCK * WARP_SIZE)
 
-
 #ifndef NUM_BATCHES
 #define NUM_BATCHES 10000
 #endif
@@ -248,7 +247,6 @@ int main(int argc, char *argv[])
         h_A[i] = 1;
         unsigned int local_seed = i;
         h_A[i] = rand_r(&local_seed) % 3;
-        
     }
 
 #pragma omp parallel for
@@ -257,7 +255,6 @@ int main(int argc, char *argv[])
         h_B[i] = 1;
         unsigned int local_seed = i;
         h_B[i] = rand_r(&local_seed) % 3;
-        
     }
 
     double *d_A, *d_B;
@@ -339,9 +336,8 @@ int main(int argc, char *argv[])
     {
         if (fabs(h_C[i] - h_C_ref[i]) > 1e-6)
         {
-            
+
             error = 1;
-            
         }
     }
 

@@ -73,7 +73,7 @@ __global__ void block_gemm_1d_double_mma(const double *A, const double *B, doubl
     double a_frags[SUB_M_BLOCK / WMMA_M_BLOCK][K_BLOCK / WMMA_K_BLOCK][4];
     double b_frags[SUB_N_BLOCK / WMMA_N_BLOCK][K_BLOCK / WMMA_K_BLOCK][2];
 
-    double(*b_compute)[K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK][2 * WARP_SIZE] = reinterpret_cast<double(*)[K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK][2 * WARP_SIZE]>(shmem_b);
+    double (*b_compute)[K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK][2 * WARP_SIZE] = reinterpret_cast<double (*)[K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK][2 * WARP_SIZE]>(shmem_b);
 
     double c_frags[SUB_M_BLOCK / WMMA_M_BLOCK][N_BLOCK / WMMA_N_BLOCK][4];
 

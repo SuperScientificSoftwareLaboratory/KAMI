@@ -30,8 +30,8 @@ kami_all.columns = [
 ]
 kami_all = kami_all[kami_all['batchcount'].isin([1000, 10000])]
 kami_all['mnk'] = kami_all['m']
-kami_best = kami_all.sort_values('tflops', ascending=False).drop_duplicates(
-    ['m', 'n', 'k', 'batchcount'])
+kami_best = kami_all.drop_duplicates(subset=['m', 'n', 'k', 'batchcount'],
+                                     keep='first')
 has_magma_data = False
 if os.path.exists(magma_path):
     try:
@@ -39,8 +39,7 @@ if os.path.exists(magma_path):
         if not magma_df.empty:
             has_magma_data = True
             magma_df.columns = [
-                'batchcount', 'm', 'n', 'k',
-                'magma_gflops', 'magma_time',
+                'batchcount', 'm', 'n', 'k', 'magma_gflops', 'magma_time',
                 'cublas_gflops', 'cublas_time'
             ]
             magma_df = magma_df[magma_df['batchcount'].isin([1000, 10000])]
@@ -50,7 +49,9 @@ if os.path.exists(magma_path):
     except pd.errors.EmptyDataError:
         print(f"Warning: {magma_path} is empty. Skipping MAGMA/cuBLAS plots.")
     except pd.errors.ParserError:
-        print(f"Warning: {magma_path} contains invalid CSV data. Skipping MAGMA/cuBLAS plots.")
+        print(
+            f"Warning: {magma_path} contains invalid CSV data. Skipping MAGMA/cuBLAS plots."
+        )
 else:
     print(f"Warning: {magma_path} does not exist. Only plotting KAMI.")
 
@@ -141,12 +142,12 @@ if has_magma_data:
             marker='o',
             markersize=marker_size)
     ax.plot(magma_1000['mnk'],
-        magma_1000['magma_tflops'],
-        color='C2',
-        linestyle='-',
-        linewidth=line_width,
-        marker='^',
-        markersize=marker_size)
+            magma_1000['magma_tflops'],
+            color='C2',
+            linestyle='-',
+            linewidth=line_width,
+            marker='^',
+            markersize=marker_size)
     ax.plot(magma_10000['mnk'],
             magma_10000['magma_tflops'],
             color='C2',
@@ -170,7 +171,6 @@ ax.plot(kami_10000['mnk'],
         marker='s',
         markersize=marker_size)
 
-
 ax.set_xlabel('Matrix order', fontsize=font_size, weight='bold')
 ax.set_ylabel('TFLOPS', fontsize=font_size, weight='bold')
 ax.tick_params(labelsize=font_size)
@@ -178,50 +178,50 @@ ax.tick_params(labelsize=font_size)
 if has_magma_data:
     handles_batch1000 = [
         Line2D([0], [0],
-            color='C2',
-            linestyle='-',
-            marker='^',
-            label='MAGMA',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C2',
+               linestyle='-',
+               marker='^',
+               label='MAGMA',
+               linewidth=line_width,
+               markersize=marker_size),
         Line2D([0], [0],
-            color='C0',
-            linestyle='-',
-            marker='o',
-            label='cuBLAS',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C0',
+               linestyle='-',
+               marker='o',
+               label='cuBLAS',
+               linewidth=line_width,
+               markersize=marker_size),
         Line2D([0], [0],
-            color='C1',
-            linestyle='-',
-            marker='s',
-            label='KAMI',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C1',
+               linestyle='-',
+               marker='s',
+               label='KAMI',
+               linewidth=line_width,
+               markersize=marker_size),
     ]
 
     handles_batch10000 = [
         Line2D([0], [0],
-            color='C2',
-            linestyle='--',
-            marker='^',
-            label='MAGMA',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C2',
+               linestyle='--',
+               marker='^',
+               label='MAGMA',
+               linewidth=line_width,
+               markersize=marker_size),
         Line2D([0], [0],
-            color='C0',
-            linestyle='--',
-            marker='o',
-            label='cuBLAS',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C0',
+               linestyle='--',
+               marker='o',
+               label='cuBLAS',
+               linewidth=line_width,
+               markersize=marker_size),
         Line2D([0], [0],
-            color='C1',
-            linestyle='--',
-            marker='s',
-            label='KAMI',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C1',
+               linestyle='--',
+               marker='s',
+               label='KAMI',
+               linewidth=line_width,
+               markersize=marker_size),
     ]
 
     legend1 = fig.legend(
@@ -250,29 +250,30 @@ if has_magma_data:
 else:
     handles_batch1000 = [
         Line2D([0], [0],
-            color='C1',
-            linestyle='-',
-            marker='s',
-            label='KAMI',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C1',
+               linestyle='-',
+               marker='s',
+               label='KAMI',
+               linewidth=line_width,
+               markersize=marker_size),
     ]
 
     handles_batch10000 = [
         Line2D([0], [0],
-            color='C1',
-            linestyle='--',
-            marker='s',
-            label='KAMI',
-            linewidth=line_width,
-            markersize=marker_size),
+               color='C1',
+               linestyle='--',
+               marker='s',
+               label='KAMI',
+               linewidth=line_width,
+               markersize=marker_size),
     ]
 
     legend1 = fig.legend(
-        handles=[Line2D([0], [0], color='none', label='#Batches=1000  ')] + handles_batch1000,
+        handles=[Line2D([0], [0], color='none', label='#Batches=1000  ')] +
+        handles_batch1000,
         loc='upper center',
         bbox_to_anchor=(0.5, 1.47),
-        ncol=2, 
+        ncol=2,
         fontsize=legend_font_size,
         frameon=False,
         handletextpad=0.5,
@@ -280,7 +281,8 @@ else:
         columnspacing=0.6)
 
     legend2 = fig.legend(
-        handles=[Line2D([0], [0], color='none', label='#Batches=10000')] + handles_batch10000,
+        handles=[Line2D([0], [0], color='none', label='#Batches=10000')] +
+        handles_batch10000,
         loc='upper center',
         bbox_to_anchor=(0.5, 1.37),
         ncol=2,
@@ -289,7 +291,6 @@ else:
         handletextpad=0.5,
         handlelength=2.4,
         columnspacing=0.6)
-
 
 plt.tight_layout(rect=[0, 0, 1, 1.25])
 plt.xticks(fontsize=font_size)

@@ -130,7 +130,7 @@ run_block_test 1d "../src/block_gemm/KAMI/1d/fp16" "../../../../../logs/block_ge
 run_block_test 2d "../src/block_gemm/KAMI/2d/fp16" "../../../../../logs/block_gemm/square/5090/fp16_block_square_2d_5090"
 run_block_test 3d "../src/block_gemm/KAMI/3d/fp16" "../../../../../logs/block_gemm/square/5090/fp16_block_square_3d_5090"
 
-run_cublasdx_test "../src/block_gemm/cuBLASDx" "../../../logs/block_gemm/square/5090/cublasdx"
+run_cublasdx_test "../src/block_gemm/cuBLASDx" "../../../logs/block_gemm/square/5090/fp16_cublasdx"
 
 CONFIGS=(
     "Problem_m=16 Problem_n=16 Problem_k=16 Block_m=16 Block_n=16 Block_k=16 Warp_m=16 Warp_n=16 Warp_k=16 Instruction_m=16 Instruction_n=8 Instruction_k=8 STAGES=2"
@@ -139,8 +139,8 @@ CONFIGS=(
     "Problem_m=128 Problem_n=128 Problem_k=128 Block_m=128 Block_n=128 Block_k=32 Warp_m=32 Warp_n=64 Warp_k=32 Instruction_m=16 Instruction_n=8 Instruction_k=16 STAGES=6"
     "Problem_m=192 Problem_n=192 Problem_k=192 Block_m=192 Block_n=192 Block_k=32 Warp_m=192 Warp_n=64 Warp_k=32 Instruction_m=16 Instruction_n=8 Instruction_k=16 STAGES=1"
 )
-echo "" >"../logs/block_gemm/square/5090/CUTLASS.log"
-echo "" >"../logs/block_gemm/square/5090/CUTLASS.csv"
+echo "" >"../logs/block_gemm/square/5090/fp16_CUTLASS.log"
+echo "" >"../logs/block_gemm/square/5090/fp16_CUTLASS.csv"
 
 cd ../src/block_gemm/CUTLASS/googletest
 g++ -std=c++17 -O2 -I include -I . -c src/gtest-all.cc -o gtest-all.o
@@ -150,5 +150,5 @@ g++ -std=c++17 -O2 -I include -I . -c src/gtest_main.cc -o gtest_main.o
 ar rcs libgtest_main.a gtest_main.o
 cd ../../../../scripts
 for config in "${CONFIGS[@]}"; do
-    run_cutlass_test "$config" "../src/block_gemm/CUTLASS" "../../../logs/block_gemm/square/5090/CUTLASS"
+    run_cutlass_test "$config" "../src/block_gemm/CUTLASS" "../../../logs/block_gemm/square/5090/fp16_CUTLASS"
 done

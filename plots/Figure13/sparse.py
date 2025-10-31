@@ -33,8 +33,8 @@ for key, path in file_paths.items():
     df['mnk'] = df['mnk'].astype(int)
     df['Block size'] = df['Block size'].astype(int)
 
-    df_max = df.loc[df.groupby('mnk')['tflops'].idxmax()]
-    df_max = df_max.sort_values(by='mnk')
+    df_max = df.drop_duplicates(subset=['mnk'],
+                                keep='first').sort_values(by='mnk')
     dataframes[key] = df_max
 
 plt.figure(figsize=(4, 2))
@@ -101,8 +101,8 @@ for key, path in file_paths.items():
 
     df['mnk'] = df['mnk'].astype(int)
 
-    df_max = df.loc[df.groupby('mnk')['tflops'].idxmax()]
-    df_max = df_max.sort_values(by='mnk')
+    df_max = df.drop_duplicates(subset=['mnk'],
+                                keep='first').sort_values(by='mnk')
     dataframes[key] = df_max
 
 plt.figure(figsize=(4, 2))

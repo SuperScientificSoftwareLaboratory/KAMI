@@ -70,7 +70,6 @@ __global__ void block_gemm_1d_half_mma(const half *A, const half *B, half *C, co
         return;
     }
 
-    
     uint32_t (*b_compute)[K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK / 2][4 * WARP_SIZE] = reinterpret_cast<uint32_t (*)[K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK / 2][4 * WARP_SIZE]>(shmem_b);
 
     uint32_t a_frags[SUB_M_BLOCK / WMMA_M_BLOCK][K_BLOCK / WMMA_K_BLOCK][4];
@@ -141,8 +140,7 @@ __global__ void block_gemm_1d_half_mma(const half *A, const half *B, half *C, co
 #pragma unroll
                         for (int j = 0; j < K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK / 2; j++)
                         {
-                            
-                            
+
                             int real_j = j * 2;
                             int real_j_pipe = real_j + idx_k_pipe * (K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK);
 
@@ -150,9 +148,6 @@ __global__ void block_gemm_1d_half_mma(const half *A, const half *B, half *C, co
                             b_compute[i][j][lane_id * 4 + 1] = b_frags[i][real_j_pipe][1];
                             b_compute[i][j][lane_id * 4 + 2] = b_frags[i][real_j_pipe + 1][0];
                             b_compute[i][j][lane_id * 4 + 3] = b_frags[i][real_j_pipe + 1][1];
-
-                            
-                            
                         }
                     }
                 }
@@ -168,8 +163,6 @@ __global__ void block_gemm_1d_half_mma(const half *A, const half *B, half *C, co
 #pragma unroll
                         for (int k = 0; k < K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK / 2; k++)
                         {
-                            
-                            
 
                             int real_k = k * 2;
                             int real_k_pipe = real_k + idx_k_pipe * (K_BLOCK / WMMA_K_BLOCK / NUM_PIPE_K_BLOCK);
@@ -223,15 +216,13 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < M_BLOCK * K_BLOCK; i++)
     {
-        
+
         h_A[i] = 1;
     }
 
     for (int i = 0; i < K_BLOCK * N_BLOCK; i++)
     {
         h_B[i] = rand() % 3;
-        
-        
     }
 
     half *d_A, *d_B;
@@ -279,7 +270,6 @@ int main(int argc, char *argv[])
     std::cout << "Execution time: " << milliseconds << " ms" << std::endl;
     std::cout << "Performance: " << gflops << " GFLOPS (" << tflops << " TFLOPS)" << std::endl;
     std::cout << "[hemeng_log],1d," << M_BLOCK << "," << N_BLOCK << "," << K_BLOCK << "," << NUM_RANK_BLOCK << "," << NUM_ALLOC_RANK_BLOCK << "," << tflops << "," << NUM_ALLOC_RANK_BLOCK * 32 << std::endl;
-    
 
     half *h_C = (half *)malloc(M_BLOCK * N_BLOCK * sizeof(half));
     cudaMemcpy(h_C, d_C, M_BLOCK * N_BLOCK * sizeof(half), cudaMemcpyDeviceToHost);
@@ -297,26 +287,6 @@ int main(int argc, char *argv[])
             }
         }
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     int error = 0;
     for (int i = 0; i < M_BLOCK * N_BLOCK; i++)

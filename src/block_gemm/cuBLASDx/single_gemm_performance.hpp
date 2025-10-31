@@ -160,13 +160,13 @@ int benchmark_mixed_precision_gemm(const cudaStream_t& stream, bool verbose = fa
                   << std::endl;
     }
     const auto [lda, ldb, ldc] = cublasdx::leading_dimension_of_v<gemm_type>;
-    std::cout << "[hemeng_log], "
-    << size_of<gemm_type>::m << ", "
-    << size_of<gemm_type>::n << ", "
-    << size_of<gemm_type>::k << ", "
-    << gemm_type::block_dim.x << ", "
+    std::cout << "[hemeng_log],"
+    << size_of<gemm_type>::m << ","
+    << size_of<gemm_type>::n << ","
+    << size_of<gemm_type>::k << ","
+    << gemm_type::block_dim.x << ","
     << std::fixed << std::setprecision(5)
-    <<gflops<< ", "
+    <<gflops<< ","
     << std::fixed << std::setprecision(5)
     << gflops/1000.0 << std::endl;
 

@@ -63,7 +63,6 @@
 #define STAGES 3
 #endif
 
-#if defined(CUTLASS_ARCH_MMA_SM80_SUPPORTED)
 TEST(gemm_threadblock_congruous, tensor_op)
 {
     using ElementA = double;
@@ -94,4 +93,3 @@ TEST(gemm_threadblock_congruous, tensor_op)
                                               problem_size.k(), alpha, beta)
         .run(grid, block);
 }
-#endif

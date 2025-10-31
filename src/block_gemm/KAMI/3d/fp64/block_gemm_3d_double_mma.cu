@@ -89,8 +89,8 @@ __global__ void block_gemm_3d_double_mma(const double *A, const double *B, doubl
 
     double c_frags[SUB_M_BLOCK / WMMA_M_BLOCK][SUB_N_BLOCK / WMMA_N_BLOCK][4];
 
-    double(*a_compute)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][4 * WARP_SIZE] = reinterpret_cast<double(*)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][4 * WARP_SIZE]>(shmem_a + dep_offset_a + row_offset_a);
-    double(*b_compute)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][2 * WARP_SIZE] = reinterpret_cast<double(*)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][2 * WARP_SIZE]>(shmem_b + dep_offset_b + col_offset_b);
+    double (*a_compute)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][4 * WARP_SIZE] = reinterpret_cast<double (*)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][4 * WARP_SIZE]>(shmem_a + dep_offset_a + row_offset_a);
+    double (*b_compute)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][2 * WARP_SIZE] = reinterpret_cast<double (*)[SUB_K_BLOCK / NUM_PIPE_K_BLOCK / WMMA_K_BLOCK][2 * WARP_SIZE]>(shmem_b + dep_offset_b + col_offset_b);
 
     for (int warp_row = 0; warp_row < SUB_M_BLOCK / WMMA_M_BLOCK; warp_row++)
     {
@@ -296,7 +296,6 @@ int main(int argc, char *argv[])
     cudaEventRecord(stop);
 
     cudaEventSynchronize(stop);
-
 
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess)

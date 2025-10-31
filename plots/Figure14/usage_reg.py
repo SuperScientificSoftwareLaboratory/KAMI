@@ -137,9 +137,9 @@ ax.grid(axis='y', linestyle='--', alpha=0.7)
 
 ax.axhline(y=255, color='black', linestyle='--', linewidth=2)
 
-ax.text(10.77,
+ax.text(11.77,
         260,
-        'Max reg count',
+        'Max register count',
         verticalalignment='bottom',
         horizontalalignment='right',
         fontsize=18,

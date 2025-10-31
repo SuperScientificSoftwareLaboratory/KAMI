@@ -72,7 +72,7 @@ run_cublasdx_test() {
     csv_file="${log_prefix}.csv"
     echo "" >"$log_file"
 
-    for value in 16 32 64 128; do
+    for value in 16 32 64 ; do
         echo "Running cuBLASDx test with INPUT_M=$value and INPUT_K=$value..." | tee -a $log_file
 
         rm -rf fp64_single_gemm_performance

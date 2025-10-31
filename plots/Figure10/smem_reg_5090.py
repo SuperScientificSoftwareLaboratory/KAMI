@@ -101,12 +101,10 @@ print(
 
 df_128 = df[df['M_BLOCK'] == 128]
 
-tflops_base = df_128[df_128['REG_K_SPLIT_BLOCK'] ==
-                     8]['Tflops'].values[0]
+tflops_base = df_128[df_128['REG_K_SPLIT_BLOCK'] == 8]['Tflops'].values[0]
 
 for reg_k in sorted(df_128['REG_K_SPLIT_BLOCK'].unique()):
-    tflops = df_128[df_128['REG_K_SPLIT_BLOCK'] ==
-                    reg_k]['Tflops'].values[0]
+    tflops = df_128[df_128['REG_K_SPLIT_BLOCK'] == reg_k]['Tflops'].values[0]
     ratio = tflops / tflops_base
     print(
         f"For REG_K_SPLIT_BLOCK={reg_k}, TFLOPS is {ratio:.2f}x of baseline (REG_K_SPLIT_BLOCK=8)"
