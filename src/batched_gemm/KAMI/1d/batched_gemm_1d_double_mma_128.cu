@@ -319,7 +319,7 @@ int main(int argc, char *argv[])
     {
         for (unsigned long i = 0; i < M_BLOCK; i++)
         {
-            for (unsigned long j = 0; j < M_BLOCK; j++)
+            for (unsigned long j = 0; j < N_BLOCK; j++)
             {
                 h_C_ref[i * N_BLOCK + j + batch * M_BLOCK * N_BLOCK] = 0;
                 for (unsigned long k = 0; k < K_ALL_BLOCK; k++)

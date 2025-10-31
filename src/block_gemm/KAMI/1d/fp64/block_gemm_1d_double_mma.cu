@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < M_BLOCK; i++)
     {
-        for (int j = 0; j < M_BLOCK; j++)
+        for (int j = 0; j < N_BLOCK; j++)
         {
             h_C_ref[i * N_BLOCK + j] = 0;
             for (int k = 0; k < K_BLOCK; k++)
